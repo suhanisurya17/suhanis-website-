@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// App.js
+import React, { useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDrag } from 'react-dnd';
@@ -15,8 +16,15 @@ function App() {
     projects: { visible: false, minimized: false, maximized: false },
     resume: { visible: false, minimized: false, maximized: false },
     music: { visible: false, minimized: false, maximized: false },
-
   });
+
+  const [time, setTime] = useState(new Date());
+  const [startMenuOpen, setStartMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const toggleWindow = (key, action) => {
     setWindows((prev) => ({
@@ -41,7 +49,7 @@ function App() {
           height: '100vh',
           position: 'relative',
           overflow: 'hidden',
-          paddingBottom: '40px',
+          paddingBottom: '40px', // for taskbar space
         }}
       >
         {/* Desktop Icons */}
@@ -118,10 +126,9 @@ function App() {
             <Resume />
           </Window>
         )}
-
         {windows.music.visible && !windows.music.minimized && (
           <Window
-            title="Resume"
+            title="Music"
             onMinimize={() => toggleWindow('music', 'minimized')}
             onMaximize={() => toggleWindow('music', 'maximized')}
             onClose={() => closeWindow('music')}
@@ -133,17 +140,95 @@ function App() {
 
         {/* Taskbar */}
         <div style={taskbarStyle}>
-          {Object.keys(windows).map(
-            (key) =>
-              windows[key].visible &&
-              windows[key].minimized && (
-                <TaskbarButton
-                  key={key}
-                  label={key.charAt(0).toUpperCase() + key.slice(1)}
-                  onClick={() => toggleWindow(key, 'minimized')}
-                />
-              )
-          )}
+          {/* Start Button */}
+          <div>
+          <button
+              style={startButtonStyle}
+              onClick={() => setStartMenuOpen(!startMenuOpen)}
+            >
+              <img
+                src="/icons/windows98 start logo.jpg"
+                alt="Start"
+                width="16"
+                style={{ marginRight: '5px' }}
+              />
+              Start
+            </button>
+
+            {startMenuOpen && (
+              <div style={startMenuStyle}>
+                <div
+                  style={startMenuItem}
+                  onClick={() => {
+                    toggleWindow('home', 'visible');
+                    setStartMenuOpen(false);
+                  }}
+                >
+                  Home
+                </div>
+                <div
+                  style={startMenuItem}
+                  onClick={() => {
+                    toggleWindow('about', 'visible');
+                    setStartMenuOpen(false);
+                  }}
+                >
+                  About
+                </div>
+                <div
+                  style={startMenuItem}
+                  onClick={() => {
+                    toggleWindow('projects', 'visible');
+                    setStartMenuOpen(false);
+                  }}
+                >
+                  Projects
+                </div>
+                <div
+                  style={startMenuItem}
+                  onClick={() => {
+                    toggleWindow('resume', 'visible');
+                    setStartMenuOpen(false);
+                  }}
+                >
+                  Resume
+                </div>
+                <div
+                  style={startMenuItem}
+                  onClick={() => {
+                    toggleWindow('music', 'visible');
+                    setStartMenuOpen(false);
+                  }}
+                >
+                  Music
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Left: minimized window buttons */}
+          <div style={{ display: 'flex', gap: '10px', marginLeft: '10px' }}>
+            {Object.keys(windows).map(
+              (key) =>
+                windows[key].visible &&
+                windows[key].minimized && (
+                  <TaskbarButton
+                    key={key}
+                    label={key.charAt(0).toUpperCase() + key.slice(1)}
+                    onClick={() => toggleWindow(key, 'minimized')}
+                  />
+                )
+            )}
+          </div>
+
+          {/* Right: system tray */}
+          <div style={systemTrayStyle}>
+            <button style={trayButtonStyle}>🔊</button>
+            <button style={trayButtonStyle}>🌐</button>
+            <div style={clockStyle}>
+              {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </div>
+          </div>
         </div>
       </div>
     </DndProvider>
@@ -194,7 +279,13 @@ function Window({ title, children, onMinimize, onMaximize, onClose, isMaximized 
             <button aria-label="Close" onClick={onClose}></button>
           </div>
         </div>
-        <div className="window-body" style={{ height: isMaximized ? 'calc(100% - 30px)' : 'auto', overflow: 'auto' }}>
+        <div
+          className="window-body"
+          style={{
+            height: isMaximized ? 'calc(100% - 30px)' : 'auto',
+            overflow: 'auto',
+          }}
+        >
           {children}
         </div>
       </div>
@@ -260,11 +351,67 @@ const taskbarStyle = {
   display: 'flex',
   alignItems: 'center',
   padding: '0 10px',
-  gap: '10px',
   fontFamily: 'sans-serif',
   fontSize: '14px',
   boxShadow: '0 -2px 4px rgba(0, 0, 0, 0.4)',
   zIndex: 999,
+};
+
+const startButtonStyle = {
+  backgroundColor: '#555',
+  border: 'none',
+  color: 'white',
+  padding: '5px 10px',
+  borderRadius: '4px 0 0 4px',
+  cursor: 'pointer',
+  fontWeight: 'bold',
+};
+
+const startMenuStyle = {
+  position: 'absolute',
+  bottom: '40px',
+  left: '0px',
+  width: '150px',
+  backgroundColor: '#c0c0c0',
+  border: '2px solid #fff',
+  boxShadow: '2px 2px 5px rgba(0,0,0,0.5)',
+  display: 'flex',
+  flexDirection: 'column',
+  zIndex: 1000,
+};
+
+const startMenuItem = {
+  padding: '8px 10px',
+  cursor: 'pointer',
+  borderBottom: '1px solid #808080',
+  fontFamily: 'sans-serif',
+  fontSize: '13px',
+  backgroundColor: '#c0c0c0',
+};
+
+const systemTrayStyle = {
+  marginLeft: 'auto', // pushes tray to the right
+  display: 'flex',
+  alignItems: 'center',
+  gap: '6px',
+};
+
+const trayButtonStyle = {
+  backgroundColor: '#555',
+  border: 'none',
+  color: 'white',
+  padding: '5px 6px',
+  borderRadius: '4px',
+  cursor: 'pointer',
+  fontSize: '14px',
+};
+
+const clockStyle = {
+  backgroundColor: '#555',
+  padding: '5px 8px',
+  borderRadius: '4px',
+  fontFamily: 'monospace',
+  fontSize: '12px',
 };
 
 export default App;

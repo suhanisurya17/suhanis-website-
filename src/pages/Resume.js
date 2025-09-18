@@ -1,22 +1,17 @@
-import React, { useState } from 'react';
-import { Document, Page } from 'react-pdf';
-import '../pdf-worker'; // 👈 this line loads your local worker
+import React from 'react';
 
 export default function Resume() {
-  const [numPages, setNumPages] = useState(null);
-
   return (
-    <div style={{ height: '100%', overflow: 'auto', padding: '1rem' }}>
-      <Document
-        file="/icons/Suhani_Surya_Resume_3.pdf"
-        onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-        onLoadError={(error) => console.error('PDF load error:', error)}
-        loading="Loading resume..."
-      >
-        {Array.from({ length: numPages || 0 }, (_, i) => (
-          <Page key={i} pageNumber={i + 1} />
-        ))}
-      </Document>
+    <div style={{ height: '100%', padding: '1rem' }}>
+      <iframe
+        src="/icons/Suhani_Surya_Resume_3.pdf"
+        title="Suhani Surya Resume"
+        style={{
+          width: '100%',
+          height: '90vh',
+          border: 'none',
+        }}
+      />
     </div>
   );
 }
