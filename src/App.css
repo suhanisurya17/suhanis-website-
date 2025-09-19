@@ -32,7 +32,35 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+.window {
+  border: 2px solid #fff;
+  border-right-color: #808080;
+  border-bottom-color: #808080;
+  background-color: #c0c0c0;
+  font-family: 'Tahoma', sans-serif;
+}
+
+.title-bar {
+  background: linear-gradient(to bottom, #000080, #0000cd);
+  color: white;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 4px;
+  cursor: move;
+}
+
+.title-bar-controls button {
+  width: 16px;
+  height: 14px;
+  border: none;
+  margin-left: 2px;
+  background-color: #c0c0c0;
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #808080;
 }

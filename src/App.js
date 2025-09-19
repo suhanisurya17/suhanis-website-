@@ -1,25 +1,23 @@
 // App.js
-import React, { useState, useEffect } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useDrag } from 'react-dnd';
-import Home from './pages/Home';
-import About from './pages/About';
-import Projects from './pages/Projects';
-import Resume from './pages/Resume';
-import Music from './pages/Music';
+import React, { useState, useEffect } from "react";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Projects from "./pages/Projects";
+import Resume from "./pages/Resume";
+import Music from "./pages/Music";
 
 function App() {
   const [windows, setWindows] = useState({
-    home: { visible: false, minimized: false, maximized: false },
-    about: { visible: false, minimized: false, maximized: false },
-    projects: { visible: false, minimized: false, maximized: false },
-    resume: { visible: false, minimized: false, maximized: false },
-    music: { visible: false, minimized: false, maximized: false },
+    home: { visible: false, minimized: false, maximized: false, top: 100, left: 100 },
+    about: { visible: false, minimized: false, maximized: false, top: 120, left: 150 },
+    projects: { visible: false, minimized: false, maximized: false, top: 140, left: 200 },
+    resume: { visible: false, minimized: false, maximized: false, top: 160, left: 250 },
+    music: { visible: false, minimized: false, maximized: false, top: 180, left: 300 },
   });
 
   const [time, setTime] = useState(new Date());
   const [startMenuOpen, setStartMenuOpen] = useState(false);
+  const [dragging, setDragging] = useState(null);
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -27,272 +25,207 @@ function App() {
   }, []);
 
   const toggleWindow = (key, action) => {
-    setWindows((prev) => ({
+    setWindows(prev => ({
       ...prev,
       [key]: { ...prev[key], [action]: !prev[key][action] },
     }));
   };
 
   const closeWindow = (key) => {
-    setWindows((prev) => ({
+    setWindows(prev => ({
       ...prev,
-      [key]: { visible: false, minimized: false, maximized: false },
+      [key]: { visible: false, minimized: false, maximized: false, top: prev[key].top, left: prev[key].left },
     }));
   };
 
-  return (
-    <DndProvider backend={HTML5Backend}>
+  const setWindowPosition = (key, top, left) => {
+    setWindows(prev => ({
+      ...prev,
+      [key]: { ...prev[key], top, left },
+    }));
+  };
+
+  // Drag handlers
+  const onMouseDown = (e, key) => {
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startTop = windows[key].top;
+    const startLeft = windows[key].left;
+    setDragging({ key, startX, startY, startTop, startLeft });
+  };
+
+  const onMouseMove = (e) => {
+    if (!dragging) return;
+    const deltaX = e.clientX - dragging.startX;
+    const deltaY = e.clientY - dragging.startY;
+    setWindowPosition(dragging.key, dragging.startTop + deltaY, dragging.startLeft + deltaX);
+  };
+
+  const onMouseUp = () => setDragging(null);
+
+  useEffect(() => {
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+  });
+
+  const renderWindow = (key, Component) => {
+    const win = windows[key];
+    if (!win.visible || win.minimized) return null;
+    return (
       <div
-        className="desktop"
+        key={key}
+        className="window"
         style={{
-          backgroundColor: 'teal',
-          height: '100vh',
-          position: 'relative',
-          overflow: 'hidden',
-          paddingBottom: '40px', // for taskbar space
+          width: win.maximized ? "100%" : "600px",
+          height: win.maximized ? "100%" : "400px",
+          position: "absolute",
+          top: win.maximized ? 0 : win.top,
+          left: win.maximized ? 0 : win.left,
+          zIndex: 10,
+          border: "2px solid #000",
+          backgroundColor: "#c0c0c0",
+          boxShadow: "2px 2px #fff inset, -2px -2px #808080 inset",
+          userSelect: "none",
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        {/* Desktop Icons */}
-        <div style={iconContainerStyle}>
-          <DesktopIcon
-            label="Home"
-            icon="/icons/about_me.png"
-            onClick={() => toggleWindow('home', 'visible')}
-          />
-          <DesktopIcon
-            label="About"
-            icon="/icons/projects.png"
-            onClick={() => toggleWindow('about', 'visible')}
-          />
-          <DesktopIcon
-            label="Projects"
-            icon="/icons/file.png"
-            onClick={() => toggleWindow('projects', 'visible')}
-          />
-          <DesktopIcon
-            label="Resume"
-            icon="/icons/resume.png"
-            onClick={() => toggleWindow('resume', 'visible')}
-          />
-          <DesktopIcon
-            label="Music"
-            icon="/icons/music.png"
-            onClick={() => toggleWindow('music', 'visible')}
-          />
+        {/* Title bar */}
+        <div
+          className="title-bar"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            backgroundColor: "#000080",
+            color: "white",
+            padding: "2px 5px",
+            fontWeight: "bold",
+            cursor: "move",
+            flexShrink: 0,
+          }}
+          onMouseDown={(e) => onMouseDown(e, key)}
+        >
+          <span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
+
+          {/* Button container */}
+          <div style={{ display: "flex", gap: "2px" }}>
+            <button onClick={() => toggleWindow(key, "minimized")} style={windowControlButtonStyle}>
+              −
+            </button>
+            <button onClick={() => toggleWindow(key, "maximized")} style={windowControlButtonStyle}>
+              ☐
+            </button>
+            <button
+              onClick={() => closeWindow(key)}
+              style={{
+                ...windowControlButtonStyle,
+                backgroundColor: "#e81123",
+                color: "white"
+              }}
+            >
+              ×
+            </button>
+          </div>
         </div>
 
-        {/* Windows */}
-        {windows.home.visible && !windows.home.minimized && (
-          <Window
-            title="Home"
-            onMinimize={() => toggleWindow('home', 'minimized')}
-            onMaximize={() => toggleWindow('home', 'maximized')}
-            onClose={() => closeWindow('home')}
-            isMaximized={windows.home.maximized}
-          >
-            <Home />
-          </Window>
-        )}
-        {windows.about.visible && !windows.about.minimized && (
-          <Window
-            title="About"
-            onMinimize={() => toggleWindow('about', 'minimized')}
-            onMaximize={() => toggleWindow('about', 'maximized')}
-            onClose={() => closeWindow('about')}
-            isMaximized={windows.about.maximized}
-          >
-            <About />
-          </Window>
-        )}
-        {windows.projects.visible && !windows.projects.minimized && (
-          <Window
-            title="Projects"
-            onMinimize={() => toggleWindow('projects', 'minimized')}
-            onMaximize={() => toggleWindow('projects', 'maximized')}
-            onClose={() => closeWindow('projects')}
-            isMaximized={windows.projects.maximized}
-          >
-            <Projects />
-          </Window>
-        )}
-        {windows.resume.visible && !windows.resume.minimized && (
-          <Window
-            title="Resume"
-            onMinimize={() => toggleWindow('resume', 'minimized')}
-            onMaximize={() => toggleWindow('resume', 'maximized')}
-            onClose={() => closeWindow('resume')}
-            isMaximized={windows.resume.maximized}
-          >
-            <Resume />
-          </Window>
-        )}
-        {windows.music.visible && !windows.music.minimized && (
-          <Window
-            title="Music"
-            onMinimize={() => toggleWindow('music', 'minimized')}
-            onMaximize={() => toggleWindow('music', 'maximized')}
-            onClose={() => closeWindow('music')}
-            isMaximized={windows.music.maximized}
-          >
-            <Music />
-          </Window>
-        )}
-
-        {/* Taskbar */}
-        <div style={taskbarStyle}>
-          {/* Start Button */}
-          <div>
-          <button
-              style={startButtonStyle}
-              onClick={() => setStartMenuOpen(!startMenuOpen)}
-            >
-              <img
-                src="/icons/windows98 start logo.jpg"
-                alt="Start"
-                width="16"
-                style={{ marginRight: '5px' }}
-              />
-              Start
-            </button>
-
-            {startMenuOpen && (
-              <div style={startMenuStyle}>
-                <div
-                  style={startMenuItem}
-                  onClick={() => {
-                    toggleWindow('home', 'visible');
-                    setStartMenuOpen(false);
-                  }}
-                >
-                  Home
-                </div>
-                <div
-                  style={startMenuItem}
-                  onClick={() => {
-                    toggleWindow('about', 'visible');
-                    setStartMenuOpen(false);
-                  }}
-                >
-                  About
-                </div>
-                <div
-                  style={startMenuItem}
-                  onClick={() => {
-                    toggleWindow('projects', 'visible');
-                    setStartMenuOpen(false);
-                  }}
-                >
-                  Projects
-                </div>
-                <div
-                  style={startMenuItem}
-                  onClick={() => {
-                    toggleWindow('resume', 'visible');
-                    setStartMenuOpen(false);
-                  }}
-                >
-                  Resume
-                </div>
-                <div
-                  style={startMenuItem}
-                  onClick={() => {
-                    toggleWindow('music', 'visible');
-                    setStartMenuOpen(false);
-                  }}
-                >
-                  Music
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Left: minimized window buttons */}
-          <div style={{ display: 'flex', gap: '10px', marginLeft: '10px' }}>
-            {Object.keys(windows).map(
-              (key) =>
-                windows[key].visible &&
-                windows[key].minimized && (
-                  <TaskbarButton
-                    key={key}
-                    label={key.charAt(0).toUpperCase() + key.slice(1)}
-                    onClick={() => toggleWindow(key, 'minimized')}
-                  />
-                )
-            )}
-          </div>
-
-          {/* Right: system tray */}
-          <div style={systemTrayStyle}>
-            <button style={trayButtonStyle}>🔊</button>
-            <button style={trayButtonStyle}>🌐</button>
-            <div style={clockStyle}>
-              {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </div>
-          </div>
+        <div style={{
+          padding: "5px",
+          flex: 1,
+          overflow: "auto"
+        }}>
+          <Component />
         </div>
       </div>
-    </DndProvider>
-  );
-}
-
-function DraggableWindow({ children }) {
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: 'WINDOW',
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  }));
+    );
+  };
 
   return (
     <div
-      ref={drag}
+      className="desktop"
       style={{
-        opacity: isDragging ? 0.5 : 1,
-        cursor: 'move',
-        position: 'absolute',
+        backgroundColor: "teal",
+        height: "100vh",
+        position: "relative",
+        overflow: "hidden",
+        paddingBottom: "40px",
       }}
     >
-      {children}
+      {/* Desktop Icons */}
+      <div style={iconContainerStyle}>
+        <DesktopIcon label="Home" icon="/icons/about_me.png" onClick={() => toggleWindow("home", "visible")} />
+        <DesktopIcon label="About" icon="/icons/projects.png" onClick={() => toggleWindow("about", "visible")} />
+        <DesktopIcon label="Projects" icon="/icons/file.png" onClick={() => toggleWindow("projects", "visible")} />
+        <DesktopIcon label="Resume" icon="/icons/resume.png" onClick={() => toggleWindow("resume", "visible")} />
+        <DesktopIcon label="Music" icon="/icons/music.png" onClick={() => toggleWindow("music", "visible")} />
+      </div>
+
+      {/* Windows */}
+      {renderWindow("home", Home)}
+      {renderWindow("about", About)}
+      {renderWindow("projects", Projects)}
+      {renderWindow("resume", Resume)}
+      {renderWindow("music", Music)}
+
+      {/* Taskbar */}
+      <div style={taskbarStyle}>
+        <div>
+          <button style={startButtonStyle} onClick={() => setStartMenuOpen(!startMenuOpen)}>
+            <img src="/icons/windows98 start logo.jpg" alt="Start" width="16" style={{ marginRight: "5px" }} />
+            Start
+          </button>
+          {startMenuOpen && (
+            <div style={startMenuStyle}>
+              {["home", "about", "projects", "resume", "music"].map((key) => (
+                <div
+                  key={key}
+                  style={startMenuItem}
+                  onClick={() => {
+                    toggleWindow(key, "visible");
+                    setStartMenuOpen(false);
+                  }}
+                >
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Minimized windows */}
+        <div style={{ display: "flex", gap: "5px", marginLeft: "10px" }}>
+          {Object.entries(windows).map(
+            ([key, w]) =>
+              w.visible &&
+              w.minimized && (
+                <TaskbarButton
+                  key={key}
+                  label={key.charAt(0).toUpperCase() + key.slice(1)}
+                  onClick={() => toggleWindow(key, "minimized")}
+                />
+              )
+          )}
+        </div>
+
+        {/* System tray */}
+        <div style={systemTrayStyle}>
+          <button style={trayButtonStyle}>🔊</button>
+          <button style={trayButtonStyle}>🌐</button>
+          <div style={clockStyle}>
+            {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-function Window({ title, children, onMinimize, onMaximize, onClose, isMaximized }) {
-  return (
-    <DraggableWindow>
-      <div
-        className="window"
-        style={{
-          width: isMaximized ? '100%' : '300px',
-          height: isMaximized ? '100%' : 'auto',
-          position: 'absolute',
-          top: isMaximized ? 0 : '120px',
-          left: isMaximized ? 0 : '200px',
-          zIndex: 10,
-        }}
-      >
-        <div className="title-bar">
-          <div className="title-bar-text">{title}</div>
-          <div className="title-bar-controls">
-            <button aria-label="Minimize" onClick={onMinimize}></button>
-            <button aria-label="Maximize" onClick={onMaximize}></button>
-            <button aria-label="Close" onClick={onClose}></button>
-          </div>
-        </div>
-        <div
-          className="window-body"
-          style={{
-            height: isMaximized ? 'calc(100% - 30px)' : 'auto',
-            overflow: 'auto',
-          }}
-        >
-          {children}
-        </div>
-      </div>
-    </DraggableWindow>
-  );
-}
-
+// Desktop Icon
 function DesktopIcon({ label, icon, onClick }) {
   return (
     <div onClick={onClick} style={iconStyle}>
@@ -302,116 +235,140 @@ function DesktopIcon({ label, icon, onClick }) {
   );
 }
 
+// Taskbar Button
 function TaskbarButton({ label, onClick }) {
   return (
-    <button
-      style={{
-        backgroundColor: '#555',
-        border: 'none',
-        color: 'white',
-        padding: '5px 10px',
-        borderRadius: '4px',
-        cursor: 'pointer',
-      }}
-      onClick={onClick}
-    >
+    <button onClick={onClick} style={{ ...winButtonStyle, marginRight: "3px" }}>
       {label}
     </button>
   );
 }
 
+// Styles
 const iconContainerStyle = {
-  position: 'absolute',
-  top: '60px',
-  left: '10px',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '20px',
-  color: 'white',
-  fontFamily: 'sans-serif',
-  fontSize: '13px',
-  textAlign: 'center',
+  position: "absolute",
+  top: "60px",
+  left: "10px",
+  display: "flex",
+  flexDirection: "column",
+  gap: "20px",
+  color: "white",
+  fontFamily: "sans-serif",
+  fontSize: "13px",
+  textAlign: "center",
 };
 
 const iconStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  cursor: 'pointer',
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  cursor: "pointer",
 };
 
 const taskbarStyle = {
-  position: 'absolute',
+  position: "absolute",
   bottom: 0,
   left: 0,
   right: 0,
-  height: '40px',
-  backgroundColor: '#333',
-  color: 'white',
-  display: 'flex',
-  alignItems: 'center',
-  padding: '0 10px',
-  fontFamily: 'sans-serif',
-  fontSize: '14px',
-  boxShadow: '0 -2px 4px rgba(0, 0, 0, 0.4)',
+  height: "40px",
+  backgroundColor: "#333",
+  color: "white",
+  display: "flex",
+  alignItems: "center",
+  padding: "0 10px",
+  fontFamily: "sans-serif",
+  fontSize: "14px",
+  boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.4)",
   zIndex: 999,
 };
 
 const startButtonStyle = {
-  backgroundColor: '#555',
-  border: 'none',
-  color: 'white',
-  padding: '5px 10px',
-  borderRadius: '4px 0 0 4px',
-  cursor: 'pointer',
-  fontWeight: 'bold',
+  backgroundColor: "#555",
+  border: "none",
+  color: "white",
+  padding: "3px 6px",
+  borderRadius: "4px 0 0 4px",
+  cursor: "pointer",
+  fontWeight: "bold",
 };
 
 const startMenuStyle = {
-  position: 'absolute',
-  bottom: '40px',
-  left: '0px',
-  width: '150px',
-  backgroundColor: '#c0c0c0',
-  border: '2px solid #fff',
-  boxShadow: '2px 2px 5px rgba(0,0,0,0.5)',
-  display: 'flex',
-  flexDirection: 'column',
+  position: "absolute",
+  bottom: "40px",
+  left: "0px",
+  width: "150px",
+  backgroundColor: "#c0c0c0",
+  border: "2px solid #fff",
+  boxShadow: "2px 2px 5px rgba(0,0,0,0.5)",
+  display: "flex",
+  flexDirection: "column",
   zIndex: 1000,
 };
 
 const startMenuItem = {
-  padding: '8px 10px',
-  cursor: 'pointer',
-  borderBottom: '1px solid #808080',
-  fontFamily: 'sans-serif',
-  fontSize: '13px',
-  backgroundColor: '#c0c0c0',
+  padding: "5px 10px",
+  cursor: "pointer",
+  borderBottom: "1px solid #808080",
+  fontFamily: "sans-serif",
+  fontSize: "13px",
 };
 
 const systemTrayStyle = {
-  marginLeft: 'auto', // pushes tray to the right
-  display: 'flex',
-  alignItems: 'center',
-  gap: '6px',
+  marginLeft: "auto",
+  display: "flex",
+  alignItems: "center",
+  gap: "6px",
 };
 
 const trayButtonStyle = {
-  backgroundColor: '#555',
-  border: 'none',
-  color: 'white',
-  padding: '5px 6px',
-  borderRadius: '4px',
-  cursor: 'pointer',
-  fontSize: '14px',
+  backgroundColor: "#555",
+  border: "none",
+  color: "white",
+  padding: "3px 5px",
+  borderRadius: "4px",
+  cursor: "pointer",
+  fontSize: "12px",
 };
 
 const clockStyle = {
-  backgroundColor: '#555',
-  padding: '5px 8px',
-  borderRadius: '4px',
-  fontFamily: 'monospace',
-  fontSize: '12px',
+  backgroundColor: "#555",
+  padding: "3px 5px",
+  borderRadius: "4px",
+  fontFamily: "monospace",
+  fontSize: "12px",
+};
+
+const winButtonStyle = {
+  width: "18px",
+  height: "18px",
+  border: "2px solid #fff",
+  backgroundColor: "#c0c0c0",
+  fontWeight: "bold",
+  cursor: "pointer",
+  lineHeight: "14px",
+  fontSize: "12px",
+  textAlign: "center",
+  boxSizing: "border-box",
+};
+
+// Fixed square buttons for window controls
+const windowControlButtonStyle = {
+  width: "21px",
+  height: "21px",
+  minWidth: "21px",
+  maxWidth: "21px",
+  padding: "0",
+  margin: "0 1px",
+  border: "1px solid #0078d4",
+  backgroundColor: "#e1e1e1",
+  fontWeight: "normal",
+  fontSize: "12px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  cursor: "pointer",
+  boxSizing: "border-box",
+  flexShrink: 0,
 };
 
 export default App;
