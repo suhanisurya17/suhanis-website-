@@ -5,6 +5,7 @@ import About from "./pages/About";
 import Projects from "./pages/Projects";
 import Resume from "./pages/Resume";
 import Music from "./pages/Music";
+import Photos from "./pages/Photos";
 
 function App() {
   const [windows, setWindows] = useState({
@@ -13,6 +14,8 @@ function App() {
     projects: { visible: false, minimized: false, maximized: false, top: 140, left: 200 },
     resume: { visible: false, minimized: false, maximized: false, top: 160, left: 250 },
     music: { visible: false, minimized: false, maximized: false, top: 180, left: 300 },
+    photos: { visible: false, minimized: false, maximized: false, top: 200, left: 350 }, 
+    welcome: { visible: true, minimized: false, maximized: false, top: 200, left: 400 }, // welcome popup
   });
 
   const [time, setTime] = useState(new Date());
@@ -25,21 +28,27 @@ function App() {
   }, []);
 
   const toggleWindow = (key, action) => {
-    setWindows(prev => ({
+    setWindows((prev) => ({
       ...prev,
       [key]: { ...prev[key], [action]: !prev[key][action] },
     }));
   };
 
   const closeWindow = (key) => {
-    setWindows(prev => ({
+    setWindows((prev) => ({
       ...prev,
-      [key]: { visible: false, minimized: false, maximized: false, top: prev[key].top, left: prev[key].left },
+      [key]: {
+        visible: false,
+        minimized: false,
+        maximized: false,
+        top: prev[key].top,
+        left: prev[key].left,
+      },
     }));
   };
 
   const setWindowPosition = (key, top, left) => {
-    setWindows(prev => ({
+    setWindows((prev) => ({
       ...prev,
       [key]: { ...prev[key], top, left },
     }));
@@ -58,7 +67,11 @@ function App() {
     if (!dragging) return;
     const deltaX = e.clientX - dragging.startX;
     const deltaY = e.clientY - dragging.startY;
-    setWindowPosition(dragging.key, dragging.startTop + deltaY, dragging.startLeft + deltaX);
+    setWindowPosition(
+      dragging.key,
+      dragging.startTop + deltaY,
+      dragging.startLeft + deltaX
+    );
   };
 
   const onMouseUp = () => setDragging(null);
@@ -75,17 +88,26 @@ function App() {
   const renderWindow = (key, Component) => {
     const win = windows[key];
     if (!win.visible || win.minimized) return null;
+
     return (
       <div
         key={key}
         className="window"
         style={{
-          width: win.maximized ? "100%" : "600px",
-          height: win.maximized ? "100%" : "400px",
+          width: win.maximized
+            ? "100%"
+            : key === "welcome"
+            ? "300px"
+            : "600px",
+          height: win.maximized
+            ? "100%"
+            : key === "welcome"
+            ? "150px"
+            : "400px",
           position: "absolute",
           top: win.maximized ? 0 : win.top,
           left: win.maximized ? 0 : win.left,
-          zIndex: 10,
+          zIndex: key === "welcome" ? 9999 : 10, // welcome always on top
           border: "2px solid #000",
           backgroundColor: "#c0c0c0",
           boxShadow: "2px 2px #fff inset, -2px -2px #808080 inset",
@@ -111,22 +133,35 @@ function App() {
           }}
           onMouseDown={(e) => onMouseDown(e, key)}
         >
-          <span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
+          <span>
+            {key === "welcome"
+              ? "Windows 98"
+              : key.charAt(0).toUpperCase() + key.slice(1)}
+          </span>
 
-          {/* Button container */}
           <div style={{ display: "flex", gap: "2px" }}>
-            <button onClick={() => toggleWindow(key, "minimized")} style={windowControlButtonStyle}>
-              −
-            </button>
-            <button onClick={() => toggleWindow(key, "maximized")} style={windowControlButtonStyle}>
-              ☐
-            </button>
+            {key !== "welcome" && (
+              <>
+                <button
+                  onClick={() => toggleWindow(key, "minimized")}
+                  style={windowControlButtonStyle}
+                >
+                  −
+                </button>
+                <button
+                  onClick={() => toggleWindow(key, "maximized")}
+                  style={windowControlButtonStyle}
+                >
+                  ☐
+                </button>
+              </>
+            )}
             <button
               onClick={() => closeWindow(key)}
               style={{
                 ...windowControlButtonStyle,
                 backgroundColor: "#e81123",
-                color: "white"
+                color: "white",
               }}
             >
               ×
@@ -134,12 +169,38 @@ function App() {
           </div>
         </div>
 
-        <div style={{
-          padding: "5px",
-          flex: 1,
-          overflow: "auto"
-        }}>
-          <Component />
+        {/* Window body */}
+        <div
+          style={{
+            padding: "10px",
+            flex: 1,
+            overflow: "auto",
+            textAlign: "center",
+          }}
+        >
+          {key === "welcome" ? (
+            <div>
+              <p style={{ fontSize: "14px" }}>👋 welcome to my website!</p>
+              <button
+                onClick={() => closeWindow("welcome")}
+                style={{
+                  marginTop: "10px",
+                  fontFamily: "MS Sans Serif, sans-serif",
+                  fontSize: "11px",
+                  padding: "2px 12px",
+                  border: "2px solid #fff",
+                  borderRightColor: "#808080",
+                  borderBottomColor: "#808080",
+                  backgroundColor: "#C0C0C0",
+                  cursor: "pointer",
+                }}
+              >
+                OK
+              </button>
+            </div>
+          ) : (
+            <Component />
+          )}
         </div>
       </div>
     );
@@ -158,11 +219,37 @@ function App() {
     >
       {/* Desktop Icons */}
       <div style={iconContainerStyle}>
-        <DesktopIcon label="Home" icon="/icons/about_me.png" onClick={() => toggleWindow("home", "visible")} />
-        <DesktopIcon label="About" icon="/icons/projects.png" onClick={() => toggleWindow("about", "visible")} />
-        <DesktopIcon label="Projects" icon="/icons/file.png" onClick={() => toggleWindow("projects", "visible")} />
-        <DesktopIcon label="Resume" icon="/icons/resume.png" onClick={() => toggleWindow("resume", "visible")} />
-        <DesktopIcon label="Music" icon="/icons/music.png" onClick={() => toggleWindow("music", "visible")} />
+        <DesktopIcon
+          label="Home"
+          icon="/icons/about_me.png"
+          onClick={() => toggleWindow("home", "visible")}
+        />
+        <DesktopIcon
+          label="About"
+          icon="/icons/projects.png"
+          onClick={() => toggleWindow("about", "visible")}
+        />
+        <DesktopIcon
+          label="Projects"
+          icon="/icons/file.png"
+          onClick={() => toggleWindow("projects", "visible")}
+        />
+        <DesktopIcon
+          label="Resume"
+          icon="/icons/resume.png"
+          onClick={() => toggleWindow("resume", "visible")}
+        />
+        <DesktopIcon
+          label="Music"
+          icon="/icons/music.png"
+          onClick={() => toggleWindow("music", "visible")}
+        />
+
+        <DesktopIcon
+          label="Photos"
+          icon="/icons/image-viewer.png"
+          onClick={() => toggleWindow("photos", "visible")}
+          />
       </div>
 
       {/* Windows */}
@@ -171,17 +258,27 @@ function App() {
       {renderWindow("projects", Projects)}
       {renderWindow("resume", Resume)}
       {renderWindow("music", Music)}
+      {renderWindow("photos", Photos)}
+      {renderWindow("welcome")} {/* Welcome popup */}
 
       {/* Taskbar */}
       <div style={taskbarStyle}>
         <div>
-          <button style={startButtonStyle} onClick={() => setStartMenuOpen(!startMenuOpen)}>
-            <img src="/icons/windows98 start logo.jpg" alt="Start" width="16" style={{ marginRight: "5px" }} />
+          <button
+            style={startButtonStyle}
+            onClick={() => setStartMenuOpen(!startMenuOpen)}
+          >
+            <img
+              src="/icons/windows98 start logo.jpg"
+              alt="Start"
+              width="16"
+              style={{ marginRight: "5px" }}
+            />
             Start
           </button>
           {startMenuOpen && (
             <div style={startMenuStyle}>
-              {["home", "about", "projects", "resume", "music"].map((key) => (
+              {["home", "about", "projects", "resume", "music", "photos"].map((key) => (
                 <div
                   key={key}
                   style={startMenuItem}
@@ -217,7 +314,10 @@ function App() {
           <button style={trayButtonStyle}>🔊</button>
           <button style={trayButtonStyle}>🌐</button>
           <div style={clockStyle}>
-            {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            {time.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </div>
         </div>
       </div>
@@ -351,7 +451,6 @@ const winButtonStyle = {
   boxSizing: "border-box",
 };
 
-// Fixed square buttons for window controls
 const windowControlButtonStyle = {
   width: "21px",
   height: "21px",
