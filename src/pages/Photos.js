@@ -3,17 +3,17 @@ import React, { useState } from 'react';
 function Photos() {
   const totalPhotos = 30;
   const [currentPhoto, setCurrentPhoto] = useState(1);
-  
+
   const handleNext = () => {
     setCurrentPhoto(prev => (prev < totalPhotos ? prev + 1 : 1));
   };
-  
+
   const handlePrev = () => {
     setCurrentPhoto(prev => (prev > 1 ? prev - 1 : totalPhotos));
   };
-  
+
   const photoSrc = `/icons/photos-page/pic${currentPhoto}.jpeg`;
-  
+
   return (
     <div
       style={{
@@ -129,6 +129,7 @@ function Photos() {
               objectFit: 'contain',
             }}
           />
+
         </div>
       </div>
 
@@ -145,23 +146,23 @@ function Photos() {
         }}
       >
         <div style={{ display: 'flex', gap: '8px' }}>
-          <span style={{ 
-            border: '1px inset #c0c0c0', 
+          <span style={{
+            border: '1px inset #c0c0c0',
             padding: '1px 4px',
             minWidth: '60px'
           }}>
             Ready
           </span>
-          <span style={{ 
-            border: '1px inset #c0c0c0', 
+          <span style={{
+            border: '1px inset #c0c0c0',
             padding: '1px 4px',
             minWidth: '40px'
           }}>
             {currentPhoto}/{totalPhotos}
           </span>
         </div>
-        <span style={{ 
-          border: '1px inset #c0c0c0', 
+        <span style={{
+          border: '1px inset #c0c0c0',
           padding: '1px 4px',
           minWidth: '80px',
           textAlign: 'center'
