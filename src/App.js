@@ -212,11 +212,14 @@ function App() {
     <div
       className="desktop"
       style={{
-        backgroundColor: "teal",
+        // backgroundColor: "teal",
+        backgroundImage: 'url("icons/wallpaper2.png")',
+        backgroundSize: "contain",       // scale so whole image is shown
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundColor: "rgba(0, 134, 137)",        // fill borders with black instead of white
         height: "100vh",
-        position: "relative",
-        overflow: "hidden",
-        paddingBottom: "40px",
+        width: "100vw",
       }}
     >
       {/* Desktop Icons */}
@@ -287,7 +290,7 @@ function App() {
           </button>
           {startMenuOpen && (
             <div style={startMenuStyle}>
-              {["home", "about", "projects", "resume", "music", "photos"].map((key) => (
+              {["home", "about", "projects", "resume", "music", "photos", "notepad"].map((key) => (
                 <div
                   key={key}
                   style={startMenuItem}
