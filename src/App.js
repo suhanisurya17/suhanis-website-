@@ -6,6 +6,7 @@ import Projects from "./pages/Projects";
 import Resume from "./pages/Resume";
 import Music from "./pages/Music";
 import Photos from "./pages/Photos";
+import Notepad from "./pages/Notepad";
 
 function App() {
   const [windows, setWindows] = useState({
@@ -14,7 +15,9 @@ function App() {
     projects: { visible: false, minimized: false, maximized: false, top: 140, left: 200 },
     resume: { visible: false, minimized: false, maximized: false, top: 160, left: 250 },
     music: { visible: false, minimized: false, maximized: false, top: 180, left: 300 },
-    photos: { visible: false, minimized: false, maximized: false, top: 200, left: 350 }, 
+    photos: { visible: false, minimized: false, maximized: false, top: 200, left: 350 },
+    photos: { visible: false, minimized: false, maximized: false, top: 200, left: 350 },
+    notepad: { visible: false, minimized: false, maximized: false, top: 220, left: 400 }, // Notepad window
     welcome: { visible: true, minimized: false, maximized: false, top: 200, left: 400 }, // welcome popup
   });
 
@@ -97,13 +100,13 @@ function App() {
           width: win.maximized
             ? "100%"
             : key === "welcome"
-            ? "300px"
-            : "600px",
+              ? "300px"
+              : "600px",
           height: win.maximized
             ? "100%"
             : key === "welcome"
-            ? "150px"
-            : "400px",
+              ? "150px"
+              : "400px",
           position: "absolute",
           top: win.maximized ? 0 : win.top,
           left: win.maximized ? 0 : win.left,
@@ -249,7 +252,13 @@ function App() {
           label="Photos"
           icon="/icons/image-viewer.png"
           onClick={() => toggleWindow("photos", "visible")}
-          />
+        />
+
+        <DesktopIcon
+          label="Notepad"
+          icon="/icons/notepad.png"
+          onClick={() => toggleWindow("notepad", "visible")}
+        />
       </div>
 
       {/* Windows */}
@@ -259,6 +268,7 @@ function App() {
       {renderWindow("resume", Resume)}
       {renderWindow("music", Music)}
       {renderWindow("photos", Photos)}
+      {renderWindow("notepad", Notepad)}
       {renderWindow("welcome")} {/* Welcome popup */}
 
       {/* Taskbar */}

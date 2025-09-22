@@ -12,7 +12,7 @@ function Photos() {
     setCurrentPhoto(prev => (prev > 1 ? prev - 1 : totalPhotos));
   };
   
-  const photoSrc = `/icons/photos-page/pic${currentPhoto}.png`;
+  const photoSrc = `/icons/photos-page/pic${currentPhoto}.jpeg`;
   
   return (
     <div
