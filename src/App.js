@@ -16,7 +16,6 @@ function App() {
     resume: { visible: false, minimized: false, maximized: false, top: 160, left: 250 },
     music: { visible: false, minimized: false, maximized: false, top: 180, left: 300 },
     photos: { visible: false, minimized: false, maximized: false, top: 200, left: 350 },
-    photos: { visible: false, minimized: false, maximized: false, top: 200, left: 350 },
     notepad: { visible: false, minimized: false, maximized: false, top: 220, left: 400 }, // Notepad window
     welcome: { visible: true, minimized: false, maximized: false, top: 200, left: 400 }, // welcome popup
   });
