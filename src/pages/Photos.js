@@ -120,15 +120,16 @@ function Photos() {
             height: '350px',
           }}
         >
-          <img
+         <img
             src={photoSrc}
-            alt={`Image ${currentPhoto} of ${totalPhotos}`}
+            alt=""
             style={{
               maxWidth: '100%',
               maxHeight: '100%',
               objectFit: 'contain',
             }}
           />
+
 
         </div>
       </div>
