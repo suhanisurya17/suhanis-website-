@@ -96,10 +96,12 @@ function Photos() {
         </span>
       </div>
 
+      <div><p>snapshots of my little life in university!</p></div>
+
       {/* Photo Display Area */}
       <div
         style={{
-          padding: '8px',
+          padding: '4px',
           backgroundColor: '#c0c0c0',
           display: 'flex',
           justifyContent: 'center',
@@ -120,7 +122,7 @@ function Photos() {
             height: '350px',
           }}
         >
-         <img
+          <img
             src={photoSrc}
             alt=""
             style={{
