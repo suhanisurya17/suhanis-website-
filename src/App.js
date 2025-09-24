@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
-
-// Placeholder components
-const Home = () => <div style={{fontFamily: "MS Sans Serif, sans-serif", fontSize: "12px"}}><h2>🏠 Home</h2><p>Welcome to my personal website!</p></div>;
-const About = () => <div style={{fontFamily: "MS Sans Serif, sans-serif", fontSize: "12px"}}><h2>👤 About Me</h2><p>Learn more about my background and interests.</p></div>;
-const Projects = () => <div style={{fontFamily: "MS Sans Serif, sans-serif", fontSize: "12px"}}><h2>💼 Projects</h2><p>Check out my latest work and projects.</p></div>;
-const Resume = () => <div style={{fontFamily: "MS Sans Serif, sans-serif", fontSize: "12px"}}><h2>📄 Resume</h2><p>View my professional experience and skills.</p></div>;
-const Music = () => <div style={{fontFamily: "MS Sans Serif, sans-serif", fontSize: "12px"}}><h2>🎵 Music</h2><p>Listen to my favorite tracks and playlists.</p></div>;
-const Photos = () => <div style={{fontFamily: "MS Sans Serif, sans-serif", fontSize: "12px"}}><h2>📸 Photos</h2><p>Browse through my photo gallery.</p></div>;
-const Email = () => <div style={{fontFamily: "MS Sans Serif, sans-serif", fontSize: "12px"}}><h2>📧 Email</h2><p>Send me a message through the contact form.</p></div>;
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Projects from "./pages/Projects";
+import Resume from "./pages/Resume";
+import Music from "./pages/Music";
+import Photos from "./pages/Photos";
+import Email from "./pages/Email";
 
 function App() {
   const [windows, setWindows] = useState({
@@ -25,8 +23,8 @@ function App() {
   const [startMenuOpen, setStartMenuOpen] = useState(false);
   const [dragging, setDragging] = useState(null);
 
-  // Popups
-  const [showNewFeaturesPopup, setShowNewFeaturesPopup] = useState(true);
+  // Popups - Updated with animated functionality
+  const [showNewFeaturesPopup, setShowNewFeaturesPopup] = useState(false);
   const [showRecentUpdatesPopup, setShowRecentUpdatesPopup] = useState(false);
   const [recentUpdatesVisible, setRecentUpdatesVisible] = useState(false);
 
