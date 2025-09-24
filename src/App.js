@@ -401,11 +401,11 @@ function App() {
     <div
       className="desktop"
       style={{
-        backgroundImage: 'url("icons/wallpaper2.png")',
+        backgroundImage: 'url("icons/wallpaper22.jpeg")',
         backgroundSize: "contain",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        backgroundColor: "rgba(0, 134, 137)",
+        backgroundColor: "rgba(0, 142, 148)", //rgba(0, 134, 137)
         height: "100vh",
         width: "100vw",
       }}
