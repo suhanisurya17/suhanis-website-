@@ -268,7 +268,7 @@ function App() {
           ×
         </button>
       </div>
-      
+
       {/* Content */}
       <div style={{ padding: "12px", fontSize: "11px" }}>
         {content}
@@ -351,7 +351,7 @@ function App() {
             ×
           </button>
         </div>
-        
+
         {/* Content */}
         <div style={{ padding: "12px", fontSize: "11px" }}>
           <ul style={{ paddingLeft: "16px", margin: 0, lineHeight: "1.4" }}>
@@ -385,7 +385,7 @@ function App() {
           gap: "6px",
         }}
       >
-        <span style={{ 
+        <span style={{
           transform: recentUpdatesVisible ? "rotate(180deg)" : "rotate(0deg)",
           transition: "transform 0.2s ease",
           display: "inline-block"
@@ -416,11 +416,9 @@ function App() {
         content={
           <div>
             <ul style={{ paddingLeft: "16px", margin: 0, textAlign: "left", lineHeight: "1.4" }}>
-              <li>Rich text editor for composing messages</li>
-              <li>Email search and filter functionality</li>
+              <li>AI Agent Bot</li>
+              <li>Stocks and Investing Pop Ups</li>
               <li>Dark mode theme option</li>
-              <li>Drag and drop file attachments</li>
-              <li>Email templates and signatures</li>
             </ul>
           </div>
         }
@@ -464,12 +462,12 @@ function App() {
           </button>
           {startMenuOpen && (
             <div style={startMenuStyle}>
-              {["home","about","projects","resume","music","photos","email"].map(key => (
+              {["home", "about", "projects", "resume", "music", "photos", "email"].map(key => (
                 <div
                   key={key}
                   style={startMenuItem}
                   onClick={() => {
-                    toggleWindow(key,"visible");
+                    toggleWindow(key, "visible");
                     setStartMenuOpen(false);
                   }}
                 >
@@ -482,7 +480,7 @@ function App() {
 
         <div style={{ display: "flex", gap: "5px", marginLeft: "10px" }}>
           {Object.entries(windows).map(([key, w]) =>
-            w.visible && w.minimized && <TaskbarButton key={key} label={key.charAt(0).toUpperCase()+key.slice(1)} onClick={() => toggleWindow(key,"minimized")} />
+            w.visible && w.minimized && <TaskbarButton key={key} label={key.charAt(0).toUpperCase() + key.slice(1)} onClick={() => toggleWindow(key, "minimized")} />
           )}
         </div>
 
@@ -490,7 +488,7 @@ function App() {
           <button style={trayButtonStyle}>🔊</button>
           <button style={trayButtonStyle}>🌐</button>
           {/* Show recent updates button in system tray */}
-          <button 
+          <button
             style={{
               ...trayButtonStyle,
               backgroundColor: showRecentUpdatesPopup ? "#a0a0a0" : "#c0c0c0",
