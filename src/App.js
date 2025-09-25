@@ -7,37 +7,43 @@ import Music from "./pages/Music";
 import Photos from "./pages/Photos";
 import Email from "./pages/Email";
 
-// Stocks Component
+//Stocks function
 function Stocks() {
   const [stockData, setStockData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdate, setLastUpdate] = useState(new Date());
 
-  // Common stocks and ETFs to track
+  //Symbols of common stocks
   const symbols = React.useMemo(() => ['VFV.TO', 'SHOP.TO', 'AAPL', 'GOOGL', 'MSFT', 'TSLA', 'VTI', 'SPY'], []);
 
-  // Fetch real stock data using Alpha Vantage API (free tier)
+  //Fetching real-time api data
   const fetchStockData = React.useCallback(async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const stockResults = {};
-      
-      // Note: Using a demo API key - you'll need to get your own free key from https://www.alphavantage.co/support/#api-key
-      const API_KEY = '39NSFD3HSYLDWT92'; // Replace with your actual API key
-      
+
+      const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_API_KEY;
+
+      console.log('API Key:', API_KEY); // Check if it's defined
+
       // For demo purposes, we'll fetch a few key stocks
       const prioritySymbols = ['AAPL', 'GOOGL', 'MSFT', 'TSLA'];
-      
+
       for (const symbol of prioritySymbols) {
         try {
           const response = await fetch(
             `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${API_KEY}`
           );
           const data = await response.json();
-          
+
+          // console.log('Response status:', response.status);
+          // console.log('Response data:', data); // See what Alpha Vantage is returning
+          // console.log('Full response data:', JSON.stringify(data, null, 2));
+
+
           if (data['Global Quote']) {
             const quote = data['Global Quote'];
             stockResults[symbol] = {
@@ -53,22 +59,22 @@ function Stocks() {
           console.error(`Error fetching ${symbol}:`, err);
         }
       }
-      
+
       // If API calls failed or no data, fall back to realistic demo data
       if (Object.keys(stockResults).length === 0) {
         symbols.forEach(symbol => {
-          const basePrice = symbol.includes('VFV') ? 120 : 
-                           symbol.includes('SHOP') ? 85 :
-                           symbol === 'AAPL' ? 175 :
-                           symbol === 'GOOGL' ? 140 :
-                           symbol === 'MSFT' ? 350 :
-                           symbol === 'TSLA' ? 250 :
-                           symbol === 'VTI' ? 240 :
-                           symbol === 'SPY' ? 450 : 100;
-          
+          const basePrice = symbol.includes('VFV') ? 120 :
+            symbol.includes('SHOP') ? 85 :
+              symbol === 'AAPL' ? 175 :
+                symbol === 'GOOGL' ? 140 :
+                  symbol === 'MSFT' ? 350 :
+                    symbol === 'TSLA' ? 250 :
+                      symbol === 'VTI' ? 240 :
+                        symbol === 'SPY' ? 450 : 100;
+
           const change = (Math.random() - 0.5) * 10;
           const changePercent = (change / basePrice) * 100;
-          
+
           stockResults[symbol] = {
             price: (basePrice + change).toFixed(2),
             change: change.toFixed(2),
@@ -80,7 +86,7 @@ function Stocks() {
         });
         setError('Using demo data - API key needed for live data');
       }
-      
+
       setStockData(stockResults);
       setLastUpdate(new Date());
     } catch (err) {
@@ -140,11 +146,11 @@ function Stocks() {
       </div>
 
       {error && (
-        <div style={{ 
-          backgroundColor: '#ffffcc', 
-          border: '1px solid #ffcc00', 
-          padding: '5px', 
-          marginBottom: '10px', 
+        <div style={{
+          backgroundColor: '#ffffcc',
+          border: '1px solid #ffcc00',
+          padding: '5px',
+          marginBottom: '10px',
           fontSize: '10px',
           textAlign: 'center'
         }}>
@@ -152,9 +158,9 @@ function Stocks() {
         </div>
       )}
 
-      <div style={{ 
-        border: '2px inset #c0c0c0', 
-        backgroundColor: 'white', 
+      <div style={{
+        border: '2px inset #c0c0c0',
+        backgroundColor: 'white',
         padding: '5px',
         maxHeight: '300px',
         overflowY: 'auto'
@@ -173,10 +179,10 @@ function Stocks() {
             {symbols.map(symbol => {
               const stock = stockData[symbol];
               if (!stock) return null;
-              
+
               const isPositive = parseFloat(stock.change) >= 0;
               const changeColor = isPositive ? '#006600' : '#cc0000';
-              
+
               return (
                 <tr key={symbol} style={{ backgroundColor: symbol.includes('.TO') ? '#f0f8ff' : 'white' }}>
                   <td style={{ padding: '3px 4px', border: '1px solid #e0e0e0', fontWeight: 'bold' }}>
