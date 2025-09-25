@@ -7,6 +7,212 @@ import Music from "./pages/Music";
 import Photos from "./pages/Photos";
 import Email from "./pages/Email";
 
+// Stocks Component
+function Stocks() {
+  const [stockData, setStockData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
+
+  // Common stocks and ETFs to track
+  const symbols = React.useMemo(() => ['VFV.TO', 'SHOP.TO', 'AAPL', 'GOOGL', 'MSFT', 'TSLA', 'VTI', 'SPY'], []);
+
+  // Fetch real stock data using Alpha Vantage API (free tier)
+  const fetchStockData = React.useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const stockResults = {};
+      
+      // Note: Using a demo API key - you'll need to get your own free key from https://www.alphavantage.co/support/#api-key
+      const API_KEY = '39NSFD3HSYLDWT92'; // Replace with your actual API key
+      
+      // For demo purposes, we'll fetch a few key stocks
+      const prioritySymbols = ['AAPL', 'GOOGL', 'MSFT', 'TSLA'];
+      
+      for (const symbol of prioritySymbols) {
+        try {
+          const response = await fetch(
+            `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${API_KEY}`
+          );
+          const data = await response.json();
+          
+          if (data['Global Quote']) {
+            const quote = data['Global Quote'];
+            stockResults[symbol] = {
+              price: parseFloat(quote['05. price']).toFixed(2),
+              change: parseFloat(quote['09. change']).toFixed(2),
+              changePercent: parseFloat(quote['10. change percent'].replace('%', '')).toFixed(2),
+              volume: parseInt(quote['06. volume']).toLocaleString(),
+              high: parseFloat(quote['03. high']).toFixed(2),
+              low: parseFloat(quote['04. low']).toFixed(2)
+            };
+          }
+        } catch (err) {
+          console.error(`Error fetching ${symbol}:`, err);
+        }
+      }
+      
+      // If API calls failed or no data, fall back to realistic demo data
+      if (Object.keys(stockResults).length === 0) {
+        symbols.forEach(symbol => {
+          const basePrice = symbol.includes('VFV') ? 120 : 
+                           symbol.includes('SHOP') ? 85 :
+                           symbol === 'AAPL' ? 175 :
+                           symbol === 'GOOGL' ? 140 :
+                           symbol === 'MSFT' ? 350 :
+                           symbol === 'TSLA' ? 250 :
+                           symbol === 'VTI' ? 240 :
+                           symbol === 'SPY' ? 450 : 100;
+          
+          const change = (Math.random() - 0.5) * 10;
+          const changePercent = (change / basePrice) * 100;
+          
+          stockResults[symbol] = {
+            price: (basePrice + change).toFixed(2),
+            change: change.toFixed(2),
+            changePercent: changePercent.toFixed(2),
+            volume: Math.floor(Math.random() * 1000000) + 100000,
+            high: (basePrice + Math.abs(change) + Math.random() * 5).toFixed(2),
+            low: (basePrice - Math.abs(change) - Math.random() * 5).toFixed(2)
+          };
+        });
+        setError('Using demo data - API key needed for live data');
+      }
+      
+      setStockData(stockResults);
+      setLastUpdate(new Date());
+    } catch (err) {
+      setError('Failed to fetch stock data');
+      console.error('Stock fetch error:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [symbols]);
+
+  useEffect(() => {
+    fetchStockData();
+
+    // Update every 5 minutes (to respect API rate limits)
+    const interval = setInterval(() => {
+      fetchStockData();
+    }, 300000); // 5 minutes
+
+    return () => clearInterval(interval);
+  }, [fetchStockData]);
+
+  const refreshData = () => {
+    fetchStockData();
+  };
+
+  if (loading) {
+    return (
+      <div style={{ textAlign: 'center', padding: '20px' }}>
+        <div style={{ fontSize: '14px', marginBottom: '10px' }}>📈 Loading real-time stock data...</div>
+        <div style={{ fontSize: '11px', color: '#666' }}>Connecting to market data...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: '10px', fontFamily: 'MS Sans Serif, sans-serif', fontSize: '11px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+        <h3 style={{ margin: 0, fontSize: '13px' }}>📊 Stock Market Dashboard</h3>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <span style={{ fontSize: '10px', color: '#666' }}>
+            Last updated: {lastUpdate.toLocaleTimeString()}
+          </span>
+          <button
+            onClick={refreshData}
+            style={{
+              padding: '2px 8px',
+              border: '2px outset #c0c0c0',
+              backgroundColor: '#c0c0c0',
+              cursor: 'pointer',
+              fontFamily: 'MS Sans Serif, sans-serif',
+              fontSize: '10px'
+            }}
+          >
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      {error && (
+        <div style={{ 
+          backgroundColor: '#ffffcc', 
+          border: '1px solid #ffcc00', 
+          padding: '5px', 
+          marginBottom: '10px', 
+          fontSize: '10px',
+          textAlign: 'center'
+        }}>
+          ⚠️ {error}
+        </div>
+      )}
+
+      <div style={{ 
+        border: '2px inset #c0c0c0', 
+        backgroundColor: 'white', 
+        padding: '5px',
+        maxHeight: '300px',
+        overflowY: 'auto'
+      }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '10px' }}>
+          <thead>
+            <tr style={{ backgroundColor: '#c0c0c0' }}>
+              <th style={{ padding: '4px', border: '1px solid #808080', textAlign: 'left' }}>Symbol</th>
+              <th style={{ padding: '4px', border: '1px solid #808080', textAlign: 'right' }}>Price</th>
+              <th style={{ padding: '4px', border: '1px solid #808080', textAlign: 'right' }}>Change</th>
+              <th style={{ padding: '4px', border: '1px solid #808080', textAlign: 'right' }}>%</th>
+              <th style={{ padding: '4px', border: '1px solid #808080', textAlign: 'right' }}>Volume</th>
+            </tr>
+          </thead>
+          <tbody>
+            {symbols.map(symbol => {
+              const stock = stockData[symbol];
+              if (!stock) return null;
+              
+              const isPositive = parseFloat(stock.change) >= 0;
+              const changeColor = isPositive ? '#006600' : '#cc0000';
+              
+              return (
+                <tr key={symbol} style={{ backgroundColor: symbol.includes('.TO') ? '#f0f8ff' : 'white' }}>
+                  <td style={{ padding: '3px 4px', border: '1px solid #e0e0e0', fontWeight: 'bold' }}>
+                    {symbol}
+                    {symbol.includes('.TO') && <span style={{ fontSize: '8px', color: '#666' }}> (TSX)</span>}
+                  </td>
+                  <td style={{ padding: '3px 4px', border: '1px solid #e0e0e0', textAlign: 'right' }}>
+                    ${stock.price}
+                  </td>
+                  <td style={{ padding: '3px 4px', border: '1px solid #e0e0e0', textAlign: 'right', color: changeColor }}>
+                    {isPositive ? '+' : ''}{stock.change}
+                  </td>
+                  <td style={{ padding: '3px 4px', border: '1px solid #e0e0e0', textAlign: 'right', color: changeColor }}>
+                    {isPositive ? '+' : ''}{stock.changePercent}%
+                  </td>
+                  <td style={{ padding: '3px 4px', border: '1px solid #e0e0e0', textAlign: 'right', fontSize: '9px' }}>
+                    {typeof stock.volume === 'string' ? stock.volume : parseInt(stock.volume).toLocaleString()}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      <div style={{ marginTop: '10px', fontSize: '9px', color: '#666', textAlign: 'center' }}>
+        <div>📡 Real-time data via Alpha Vantage API</div>
+        <div>🇨🇦 .TO symbols are Toronto Stock Exchange</div>
+        <div style={{ marginTop: '5px', fontStyle: 'italic' }}>
+          * Get your free API key at alphavantage.co for live data
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [windows, setWindows] = useState({
     home: { visible: false, minimized: false, maximized: false, top: 100, left: 100 },
@@ -16,6 +222,7 @@ function App() {
     music: { visible: false, minimized: false, maximized: false, top: 180, left: 300 },
     photos: { visible: false, minimized: false, maximized: false, top: 200, left: 350 },
     email: { visible: false, minimized: false, maximized: false, top: 220, left: 400 },
+    stocks: { visible: false, minimized: false, maximized: false, top: 240, left: 450 },
     welcome: { visible: true, minimized: false, maximized: false, top: 200, left: 400 },
   });
 
@@ -27,6 +234,8 @@ function App() {
   const [showNewFeaturesPopup, setShowNewFeaturesPopup] = useState(false);
   const [showRecentUpdatesPopup, setShowRecentUpdatesPopup] = useState(false);
   const [recentUpdatesVisible, setRecentUpdatesVisible] = useState(false);
+  const [showStocksPopup, setShowStocksPopup] = useState(false);
+  const [stocksPopupVisible, setStocksPopupVisible] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -112,12 +321,16 @@ function App() {
             ? "100%"
             : key === "welcome"
               ? "300px"
-              : "600px",
+              : key === "stocks"
+                ? "700px"
+                : "600px",
           height: win.maximized
             ? "100%"
             : key === "welcome"
               ? "150px"
-              : "400px",
+              : key === "stocks"
+                ? "450px"
+                : "400px",
           position: "absolute",
           top: win.maximized ? 0 : win.top,
           left: win.maximized ? 0 : win.left,
@@ -186,10 +399,10 @@ function App() {
         {/* Window body */}
         <div
           style={{
-            padding: "10px",
+            padding: key === "stocks" ? "0" : "10px",
             flex: 1,
             overflow: "auto",
-            textAlign: "center",
+            textAlign: key === "stocks" ? "left" : "center",
           }}
         >
           {key === "welcome" ? (
@@ -355,11 +568,11 @@ function App() {
         {/* Content */}
         <div style={{ padding: "12px", fontSize: "11px" }}>
           <ul style={{ paddingLeft: "16px", margin: 0, lineHeight: "1.4" }}>
+            <li>Version 1.3 - Added Real-time Stocks Dashboard</li>
             <li>Version 1.2 - Improved Inbox UI</li>
             <li>Version 1.1 - Added Sent Items and Drafts</li>
             <li>Version 1.0 - Initial Release</li>
             <li>Beta 0.9 - Added email compose feature</li>
-            <li>Beta 0.8 - Windows 98 styling</li>
           </ul>
         </div>
       </div>
@@ -397,6 +610,131 @@ function App() {
     </div>
   );
 
+  // Stocks popup (similar to recent updates)
+  const StocksPopup = () => (
+    <div
+      style={{
+        position: "fixed",
+        bottom: "50px",
+        left: "320px",
+        zIndex: 9999,
+        fontFamily: "MS Sans Serif, sans-serif",
+      }}
+    >
+      {/* Expandable content */}
+      <div
+        style={{
+          width: "250px",
+          backgroundColor: "#c0c0c0",
+          border: "2px outset #c0c0c0",
+          boxShadow: "4px 4px 12px rgba(0,0,0,0.6)",
+          marginBottom: "4px",
+          maxHeight: stocksPopupVisible ? "150px" : "0px",
+          overflow: "hidden",
+          transition: "max-height 0.3s ease-in-out",
+        }}
+      >
+        {/* Title bar */}
+        <div
+          style={{
+            background: "linear-gradient(to right, #0a246a 0%, #a6caf0 100%)",
+            color: "white",
+            padding: "4px 8px",
+            fontSize: "11px",
+            fontWeight: "bold",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <span>📈 Market Alert</span>
+          <button
+            onClick={() => {
+              setStocksPopupVisible(false);
+              setShowStocksPopup(false);
+            }}
+            style={{
+              background: "none",
+              border: "none",
+              color: "white",
+              cursor: "pointer",
+              fontSize: "14px",
+              width: "20px",
+              height: "18px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            ×
+          </button>
+        </div>
+
+        {/* Content */}
+        <div style={{ padding: "12px", fontSize: "11px" }}>
+          <div style={{ lineHeight: "1.4" }}>
+            <div>📊 Markets are active today</div>
+            <div style={{ marginTop: "6px", fontSize: "10px", color: "#666" }}>
+              • VFV.TO: Canadian equity ETF
+            </div>
+            <div style={{ fontSize: "10px", color: "#666" }}>
+              • SHOP.TO: E-commerce platform
+            </div>
+            <div style={{ marginTop: "8px" }}>
+              <button
+                onClick={() => {
+                  toggleWindow("stocks", "visible");
+                  setStocksPopupVisible(false);
+                }}
+                style={{
+                  padding: "2px 8px",
+                  border: "2px outset #c0c0c0",
+                  backgroundColor: "#c0c0c0",
+                  cursor: "pointer",
+                  fontFamily: "MS Sans Serif, sans-serif",
+                  fontSize: "10px",
+                }}
+              >
+                View Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Toggle button */}
+      <button
+        onClick={() => {
+          if (!showStocksPopup) {
+            setShowStocksPopup(true);
+          }
+          setStocksPopupVisible(!stocksPopupVisible);
+        }}
+        style={{
+          padding: "6px 12px",
+          border: "2px outset #c0c0c0",
+          backgroundColor: "#c0c0c0",
+          cursor: "pointer",
+          fontFamily: "MS Sans Serif, sans-serif",
+          fontSize: "11px",
+          fontWeight: "bold",
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+        }}
+      >
+        <span style={{
+          transform: stocksPopupVisible ? "rotate(180deg)" : "rotate(0deg)",
+          transition: "transform 0.2s ease",
+          display: "inline-block"
+        }}>
+          ▲
+        </span>
+        Stocks
+      </button>
+    </div>
+  );
+
   return (
     <div
       className="desktop"
@@ -417,7 +755,7 @@ function App() {
           <div>
             <ul style={{ paddingLeft: "16px", margin: 0, textAlign: "left", lineHeight: "1.4" }}>
               <li>AI Agent Bot</li>
-              <li>Stocks and Investing Pop Ups</li>
+              <li style={{ color: "#006600", fontWeight: "bold" }}>✓ Real-time Stocks Dashboard</li>
               <li>Dark mode theme option</li>
             </ul>
           </div>
@@ -429,6 +767,9 @@ function App() {
       {/* Bottom-left expandable popup (Recent Updates) */}
       {showRecentUpdatesPopup && <BottomLeftExpandablePopup />}
 
+      {/* Stocks popup */}
+      {showStocksPopup && <StocksPopup />}
+
       {/* Desktop Icons */}
       <div style={iconContainerStyle}>
         <DesktopIcon label="Home" icon="/icons/about_me.png" onClick={() => toggleWindow("home", "visible")} />
@@ -438,6 +779,7 @@ function App() {
         <DesktopIcon label="Music" icon="/icons/music.png" onClick={() => toggleWindow("music", "visible")} />
         <DesktopIcon label="Photos" icon="/icons/image-viewer.png" onClick={() => toggleWindow("photos", "visible")} />
         <DesktopIcon label="Email" icon="/icons/email.png" onClick={() => toggleWindow("email", "visible")} />
+        <DesktopIcon label="Stocks" icon="/icons/stocks.png" onClick={() => toggleWindow("stocks", "visible")} />
       </div>
 
       {/* Windows */}
@@ -448,6 +790,7 @@ function App() {
       {renderWindow("music", Music)}
       {renderWindow("photos", Photos)}
       {renderWindow("email", Email)}
+      {renderWindow("stocks", Stocks)}
       {renderWindow("welcome")}
 
       {/* Taskbar */}
@@ -462,7 +805,7 @@ function App() {
           </button>
           {startMenuOpen && (
             <div style={startMenuStyle}>
-              {["home", "about", "projects", "resume", "music", "photos", "email"].map(key => (
+              {["home", "about", "projects", "resume", "music", "photos", "email", "stocks"].map(key => (
                 <div
                   key={key}
                   style={startMenuItem}
@@ -487,7 +830,7 @@ function App() {
         <div style={systemTrayStyle}>
           <button style={trayButtonStyle}>🔊</button>
           <button style={trayButtonStyle}>🌐</button>
-          {/* Show recent updates button in system tray */}
+          {/* Recent updates button in system tray */}
           <button
             style={{
               ...trayButtonStyle,
@@ -499,6 +842,19 @@ function App() {
             }}
           >
             📰
+          </button>
+          {/* Stocks button in system tray */}
+          <button
+            style={{
+              ...trayButtonStyle,
+              backgroundColor: showStocksPopup ? "#a0a0a0" : "#c0c0c0",
+            }}
+            onClick={() => {
+              setShowStocksPopup(true);
+              setStocksPopupVisible(true);
+            }}
+          >
+            📈
           </button>
           <div style={clockStyle}>
             {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
