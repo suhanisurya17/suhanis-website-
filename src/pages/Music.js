@@ -1,18 +1,54 @@
 import React, { useState, useRef, useEffect } from "react";
 
 function Music() {
-  const playlist = [
-    { title: "Bohemian Rhapsody", artist: "Queen", file: "/audio/bohemian.mp3", duration: "5:55" },
-    { title: "Hotel California", artist: "Eagles", file: "/audio/hotel.mp3", duration: "6:30" },
-    { title: "Stairway to Heaven", artist: "Led Zeppelin", file: "/audio/stairway.mp3", duration: "8:02" },
-    { title: "Sweet Child O' Mine", artist: "Guns N' Roses", file: "/audio/sweetchild.mp3", duration: "5:03" },
-    { title: "Don't Stop Believin'", artist: "Journey", file: "/audio/dontstop.mp3", duration: "4:10" }
-  ];
-
+  const [playlist, setPlaylist] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentTrack, setCurrentTrack] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(50);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   const audioRef = useRef(null);
+
+  // Fetch Spotify playlist
+  useEffect(() => {
+    const fetchPlaylist = async () => {
+      try {
+        const response = await fetch('http://localhost:5001/api/playlist');
+        const data = await response.json();
+        if (data.playlist && data.playlist.length > 0) {
+          setPlaylist(data.playlist);
+        } else {
+          // Fallback to demo playlist if Spotify fails
+          setPlaylist([
+            { title: "Bohemian Rhapsody", artist: "Queen", duration: 355, spotifyUrl: "#" },
+            { title: "Hotel California", artist: "Eagles", duration: 390, spotifyUrl: "#" },
+            { title: "Stairway to Heaven", artist: "Led Zeppelin", duration: 482, spotifyUrl: "#" },
+            { title: "Sweet Child O' Mine", artist: "Guns N' Roses", duration: 303, spotifyUrl: "#" },
+            { title: "Don't Stop Believin'", artist: "Journey", duration: 250, spotifyUrl: "#" }
+          ]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch playlist:', error);
+        // Fallback playlist
+        setPlaylist([
+          { title: "Demo Track 1", artist: "Demo Artist", duration: 180, spotifyUrl: "#" },
+          { title: "Demo Track 2", artist: "Demo Artist", duration: 200, spotifyUrl: "#" }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlaylist();
+  }, []);
+
+  // Format duration from seconds to MM:SS
+  const formatDuration = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   useEffect(() => {
     if (audioRef.current) {
@@ -25,6 +61,39 @@ function Music() {
   const handlePlayPause = () => setIsPlaying(prev => !prev);
   const handleNext = () => setCurrentTrack((prev) => (prev + 1) % playlist.length);
   const handlePrev = () => setCurrentTrack((prev) => (prev - 1 + playlist.length) % playlist.length);
+
+  const openSpotify = () => {
+    if (playlist[currentTrack]?.spotifyUrl && playlist[currentTrack].spotifyUrl !== "#") {
+      window.open(playlist[currentTrack].spotifyUrl, '_blank');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div style={containerStyle}>
+        <div style={displayAreaStyle}>
+          <div style={trackInfoStyle}>
+            <div style={trackTitleStyle}>🎵 Loading Spotify Playlist...</div>
+            <div style={artistStyle}>Connecting to music library...</div>
+            <div style={timeStyle}>Please wait...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (playlist.length === 0) {
+    return (
+      <div style={containerStyle}>
+        <div style={displayAreaStyle}>
+          <div style={trackInfoStyle}>
+            <div style={trackTitleStyle}>❌ No tracks available</div>
+            <div style={artistStyle}>Unable to load playlist</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={containerStyle}>
@@ -41,13 +110,21 @@ function Music() {
       {/* Main Display */}
       <div style={displayAreaStyle}>
         <div style={trackInfoStyle}>
-          <div style={trackTitleStyle}>{playlist[currentTrack].title}</div>
-          <div style={artistStyle}>{playlist[currentTrack].artist}</div>
-          <div style={timeStyle}>00:00 / {playlist[currentTrack].duration}</div>
+          <div style={trackTitleStyle}>{playlist[currentTrack]?.title || "Unknown Track"}</div>
+          <div style={artistStyle}>{playlist[currentTrack]?.artist || "Unknown Artist"}</div>
+          <div style={timeStyle}>
+            {formatDuration(currentTime)} / {formatDuration(playlist[currentTrack]?.duration || 0)}
+          </div>
+          {playlist[currentTrack]?.spotifyUrl && playlist[currentTrack].spotifyUrl !== "#" && (
+            <button
+              style={spotifyButtonStyle}
+              onClick={openSpotify}
+              title="Open in Spotify"
+            >
+              🎵 Play on Spotify
+            </button>
+          )}
         </div>
-
-        {/* Audio element */}
-        <audio ref={audioRef} src={playlist[currentTrack].file} />
 
         {/* Visualizer */}
         <div style={visualizerStyle}>
@@ -103,7 +180,7 @@ function Music() {
             >
               <span style={trackNumberStyle}>{i + 1}.</span>
               <span style={trackInfoItemStyle}>{track.title} - {track.artist}</span>
-              <span style={durationStyle}>{track.duration}</span>
+              <span style={durationStyle}>{formatDuration(track.duration)}</span>
             </div>
           ))}
         </div>
@@ -139,5 +216,15 @@ const playlistItemStyle = { padding: "2px 8px", cursor: "pointer", display: "fle
 const trackNumberStyle = { width: "24px", fontSize: "10px" };
 const trackInfoItemStyle = { flex: 1, fontSize: "11px" };
 const durationStyle = { fontSize: "10px", color: "#666" };
+const spotifyButtonStyle = {
+  backgroundColor: "#1DB954",
+  color: "white",
+  border: "2px outset #1DB954",
+  padding: "4px 8px",
+  cursor: "pointer",
+  fontSize: "10px",
+  marginTop: "8px",
+  fontFamily: "MS Sans Serif, sans-serif"
+};
 
 export default Music;

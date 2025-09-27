@@ -8,6 +8,8 @@ import Photos from "./pages/Photos";
 import Email from "./pages/Email";
 import Experience from "./pages/Experience"; // Add this import
 import SusuBot from "./pages/SusuBot";
+import TimeMachine from "./pages/TimeMachine";
+import RandomErrorSystem from "./components/RandomErrorSystem";
 
 //Stocks function
 function Stocks() {
@@ -233,6 +235,7 @@ function App() {
     email: { visible: false, minimized: false, maximized: false, top: 240, left: 450 },
     stocks: { visible: false, minimized: false, maximized: false, top: 260, left: 500 },
     susubot: { visible: false, minimized: false, maximized: false, top: 280, left: 550 },
+    timemachine: { visible: false, minimized: false, maximized: false, top: 300, left: 600 },
     welcome: { visible: true, minimized: false, maximized: false, top: 200, left: 400 },
   });
 
@@ -373,6 +376,8 @@ function App() {
           <span>
             {key === "welcome"
               ? "Windows 98"
+              : key === "timemachine"
+              ? "Time Machine"
               : key.charAt(0).toUpperCase() + key.slice(1)}
           </span>
 
@@ -793,7 +798,23 @@ function App() {
         <DesktopIcon label="Photos" icon="/icons/image-viewer.png" onClick={() => toggleWindow("photos", "visible")} />
         <DesktopIcon label="Email" icon="/icons/email.png" onClick={() => toggleWindow("email", "visible")} />
         <DesktopIcon label="Stocks" icon="/icons/stocks.png" onClick={() => toggleWindow("stocks", "visible")} />
+      </div>
+
+      {/* SusuBot & Time Machine Icons - Positioned separately for better visibility */}
+      <div style={{
+        position: "absolute",
+        top: "80px",
+        right: "40px",
+        color: "white",
+        fontFamily: "sans-serif",
+        fontSize: "13px",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px"
+      }}>
         <DesktopIcon label="SusuBot" icon="/icons/notepad.png" onClick={() => toggleWindow("susubot", "visible")} />
+        <DesktopIcon label="Time Machine" icon="/icons/file.png" onClick={() => toggleWindow("timemachine", "visible")} />
       </div>
 
       {/* Windows */}
@@ -807,6 +828,7 @@ function App() {
       {renderWindow("email", Email)}
       {renderWindow("stocks", Stocks)}
       {renderWindow("susubot", SusuBot)}
+      {renderWindow("timemachine", TimeMachine)}
       {renderWindow("welcome")}
 
       {/* Taskbar */}
@@ -821,7 +843,7 @@ function App() {
           </button>
           {startMenuOpen && (
             <div style={startMenuStyle}>
-              {["home", "about", "projects", "experience", "resume", "music", "photos", "email", "stocks", "susubot"].map(key => (
+              {["home", "about", "projects", "experience", "resume", "music", "photos", "email", "stocks", "susubot", "timemachine"].map(key => (
                 <div
                   key={key}
                   style={startMenuItem}
@@ -830,7 +852,7 @@ function App() {
                     setStartMenuOpen(false);
                   }}
                 >
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                  {key === "timemachine" ? "Time Machine" : key.charAt(0).toUpperCase() + key.slice(1)}
                 </div>
               ))}
             </div>
@@ -877,6 +899,9 @@ function App() {
           </div>
         </div>
       </div>
+
+      {/* Random Error System */}
+      <RandomErrorSystem />
     </div>
   );
 }

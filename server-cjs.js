@@ -1,20 +1,18 @@
-// server.js
-import express from "express";
-import fetch from "node-fetch"; // npm install node-fetch
-import cors from "cors";
-import dotenv from "dotenv";
-
-dotenv.config();
+// server-cjs.js - CommonJS version
+const express = require("express");
+const fetch = require("node-fetch");
+const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors()); // Allow requests from frontend
-app.use(express.json()); // Parse JSON bodies
+app.use(cors());
+app.use(express.json());
 
-const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;      // put in .env
+const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
-const PLAYLIST_ID = "37i9dQZF1DXcBWIGoYBM5M"; // example playlist
+const PLAYLIST_ID = "37i9dQZF1DXcBWIGoYBM5M";
 
 let accessToken = "";
 let tokenExpiresAt = 0;
@@ -36,7 +34,7 @@ async function getAccessToken() {
 
   const data = await resp.json();
   accessToken = data.access_token;
-  tokenExpiresAt = now + data.expires_in * 1000 - 60000; // refresh 1 min early
+  tokenExpiresAt = now + data.expires_in * 1000 - 60000;
   return accessToken;
 }
 
@@ -61,7 +59,7 @@ app.get("/api/playlist", async (req, res) => {
     const playlist = data.items.map((item) => ({
       title: item.track.name,
       artist: item.track.artists.map((a) => a.name).join(", "),
-      duration: Math.floor(item.track.duration_ms / 1000), // seconds
+      duration: Math.floor(item.track.duration_ms / 1000),
       spotifyUrl: item.track.external_urls.spotify,
     }));
 

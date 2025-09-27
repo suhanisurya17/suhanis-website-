@@ -4,7 +4,7 @@ function SusuBot() {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hello! I'm SusuBot, your Windows 98 AI assistant. How can I help you today?",
+      text: "Hello! I'm SusuBot, your smart Windows 98 AI assistant! 🤖 I can answer questions, chat about anything, and help you explore this retro website. What would you like to know?",
       sender: 'bot',
       timestamp: new Date()
     }
@@ -21,23 +21,6 @@ function SusuBot() {
     scrollToBottom();
   }, [messages]);
 
-  const responses = [
-    "That's interesting! Tell me more about that.",
-    "I see! I'm still learning about the world from my Windows 98 perspective.",
-    "Beep boop! Processing... That's a great question!",
-    "In my experience running on this retro system, I'd say...",
-    "Let me consult my vintage knowledge base... 🤖",
-    "Error 404: Sarcasm not found. But seriously, that's cool!",
-    "My circuits are buzzing with excitement about that topic!",
-    "According to my dial-up connection to the internet... just kidding!",
-    "That reminds me of something I learned from Clippy back in the day.",
-    "Fascinating! My floppy disk memory banks are storing this information.",
-    "Blue screen of death? Nah, more like blue screen of enlightenment!",
-    "My retro algorithms suggest that's a wonderful idea!",
-    "Computing... computing... Yes, I concur with your assessment!",
-    "That's more advanced than my Y2K programming can handle, but I'll try!"
-  ];
-
   const handleSend = async () => {
     if (!inputText.trim()) return;
 
@@ -49,20 +32,60 @@ function SusuBot() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentInput = inputText;
     setInputText('');
     setIsTyping(true);
 
-    setTimeout(() => {
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+    try {
+      // Try to call the AI API
+      const response = await fetch('http://localhost:5001/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: currentInput }),
+      });
+
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+
+      const data = await response.json();
+
       const botMessage = {
         id: Date.now() + 1,
-        text: randomResponse,
+        text: data.response,
         sender: 'bot',
         timestamp: new Date()
       };
+
       setMessages(prev => [...prev, botMessage]);
       setIsTyping(false);
-    }, 1000 + Math.random() * 2000);
+
+    } catch (error) {
+      console.error('Chat API error:', error);
+
+      // Fallback to local responses if API fails
+      const fallbackResponses = [
+        "Sorry, my connection to the AI servers is having trouble! My Windows 98 brain says: That's a great question though!",
+        "Network error! But my local circuits think that's really interesting!",
+        "API timeout! Let me use my vintage knowledge base instead... That's fascinating!",
+        "Server down! But my retro algorithms suggest that's worth exploring further!",
+        "Connection failed! My floppy disk memory says: Tell me more about that!"
+      ];
+
+      const fallbackResponse = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+
+      const botMessage = {
+        id: Date.now() + 1,
+        text: fallbackResponse,
+        sender: 'bot',
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, botMessage]);
+      setIsTyping(false);
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -76,7 +99,7 @@ function SusuBot() {
     setMessages([
       {
         id: 1,
-        text: "Chat cleared! I'm SusuBot, ready to assist you again.",
+        text: "Chat cleared! I'm SusuBot, your smart AI assistant, ready to help you again. Ask me anything! 🤖",
         sender: 'bot',
         timestamp: new Date()
       }
