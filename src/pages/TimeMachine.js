@@ -33,6 +33,8 @@ function TimeMachine() {
         description: "Supported engineering teams by maintaining internal tools and virtual lab environments while gaining hands-on experience with rail technologies, systems design, and project workflows.",
         logo: "🚆",
         color: "#E74C3C"
+
+        
       },
       {
         title: "SS&C Technologies",
@@ -136,7 +138,7 @@ const containerStyle = {
   backgroundColor: "#C0C0C0",
   padding: "16px",
   height: "100%",
-  overflow: "hidden"
+  overflow: "auto"
 };
 
 const headerStyle = {

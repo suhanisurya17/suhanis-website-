@@ -229,8 +229,8 @@ function App() {
     music: { visible: false, minimized: false, maximized: false, top: 180, left: 300 },
     photos: { visible: false, minimized: false, maximized: false, top: 200, left: 350 },
     email: { visible: false, minimized: false, maximized: false, top: 220, left: 400 },
+    timemachine: { visible: false, minimized: false, maximized: false, top: 100, left: 300 },
     stocks: { visible: false, minimized: false, maximized: false, top: 240, left: 450 },
-    timemachine: { visible: false, minimized: false, maximized: false, top: 260, left: 500 },
     welcome: { visible: true, minimized: false, maximized: false, top: 200, left: 400 },
   });
 
@@ -790,18 +790,6 @@ function App() {
         <DesktopIcon label="Photos" icon="/icons/image-viewer.png" onClick={() => toggleWindow("photos", "visible")} />
         <DesktopIcon label="Email" icon="/icons/email.png" onClick={() => toggleWindow("email", "visible")} />
         <DesktopIcon label="Stocks" icon="/icons/stocks.png" onClick={() => toggleWindow("stocks", "visible")} />
-      </div>
-
-      {/* Time Machine Icon - Positioned separately */}
-      <div style={{
-        position: "absolute",
-        top: "80px",
-        right: "40px",
-        color: "white",
-        fontFamily: "sans-serif",
-        fontSize: "13px",
-        textAlign: "center"
-      }}>
         <DesktopIcon label="Time Machine" icon="/icons/file.png" onClick={() => toggleWindow("timemachine", "visible")} />
       </div>
 
@@ -813,8 +801,8 @@ function App() {
       {renderWindow("music", Music)}
       {renderWindow("photos", Photos)}
       {renderWindow("email", Email)}
-      {renderWindow("stocks", Stocks)}
       {renderWindow("timemachine", TimeMachine)}
+      {renderWindow("stocks", Stocks)}
       {renderWindow("welcome")}
 
       {/* Taskbar */}
@@ -829,7 +817,7 @@ function App() {
           </button>
           {startMenuOpen && (
             <div style={startMenuStyle}>
-              {["home", "about", "projects", "resume", "music", "photos", "email", "stocks", "timemachine"].map(key => (
+              {["home", "about", "projects", "resume", "music", "photos", "email", "timemachine", "stocks"].map(key => (
                 <div
                   key={key}
                   style={startMenuItem}
