@@ -6,6 +6,7 @@ import Resume from "./pages/Resume";
 import Music from "./pages/Music";
 import Photos from "./pages/Photos";
 import Email from "./pages/Email";
+import TimeMachine from "./pages/TimeMachine";
 
 //Stocks function
 function Stocks() {
@@ -229,6 +230,7 @@ function App() {
     photos: { visible: false, minimized: false, maximized: false, top: 200, left: 350 },
     email: { visible: false, minimized: false, maximized: false, top: 220, left: 400 },
     stocks: { visible: false, minimized: false, maximized: false, top: 240, left: 450 },
+    timemachine: { visible: false, minimized: false, maximized: false, top: 260, left: 500 },
     welcome: { visible: true, minimized: false, maximized: false, top: 200, left: 400 },
   });
 
@@ -369,6 +371,8 @@ function App() {
           <span>
             {key === "welcome"
               ? "Windows 98"
+              : key === "timemachine"
+              ? "Time Machine"
               : key.charAt(0).toUpperCase() + key.slice(1)}
           </span>
 
@@ -788,6 +792,19 @@ function App() {
         <DesktopIcon label="Stocks" icon="/icons/stocks.png" onClick={() => toggleWindow("stocks", "visible")} />
       </div>
 
+      {/* Time Machine Icon - Positioned separately */}
+      <div style={{
+        position: "absolute",
+        top: "80px",
+        right: "40px",
+        color: "white",
+        fontFamily: "sans-serif",
+        fontSize: "13px",
+        textAlign: "center"
+      }}>
+        <DesktopIcon label="Time Machine" icon="/icons/file.png" onClick={() => toggleWindow("timemachine", "visible")} />
+      </div>
+
       {/* Windows */}
       {renderWindow("home", Home)}
       {renderWindow("about", About)}
@@ -797,6 +814,7 @@ function App() {
       {renderWindow("photos", Photos)}
       {renderWindow("email", Email)}
       {renderWindow("stocks", Stocks)}
+      {renderWindow("timemachine", TimeMachine)}
       {renderWindow("welcome")}
 
       {/* Taskbar */}
@@ -811,7 +829,7 @@ function App() {
           </button>
           {startMenuOpen && (
             <div style={startMenuStyle}>
-              {["home", "about", "projects", "resume", "music", "photos", "email", "stocks"].map(key => (
+              {["home", "about", "projects", "resume", "music", "photos", "email", "stocks", "timemachine"].map(key => (
                 <div
                   key={key}
                   style={startMenuItem}
@@ -820,7 +838,7 @@ function App() {
                     setStartMenuOpen(false);
                   }}
                 >
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                  {key === "timemachine" ? "Time Machine" : key.charAt(0).toUpperCase() + key.slice(1)}
                 </div>
               ))}
             </div>
