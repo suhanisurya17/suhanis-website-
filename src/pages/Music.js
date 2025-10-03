@@ -60,7 +60,7 @@ function Music() {
         });
       }
     }
-  }, [currentTrack]);
+  }, [currentTrack, isPlaying]);
 
   const handlePlayPause = () => {
     if (audioRef.current) {

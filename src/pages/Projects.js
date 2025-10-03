@@ -238,12 +238,6 @@ const repoNameStyle = {
   wordBreak: "break-word",
 };
 
-const repoVisibilityStyle = {
-  fontSize: "9px",
-  color: "#666",
-  marginTop: "2px",
-};
-
 const descriptionStyle = {
   fontSize: "10px",
   color: "#333",
