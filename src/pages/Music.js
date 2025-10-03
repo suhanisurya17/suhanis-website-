@@ -1,30 +1,112 @@
 import React, { useState, useRef, useEffect } from "react";
 
 function Music() {
+  // Using royalty-free music from Free Music Archive via Internet Archive
   const playlist = [
-    { title: "Bohemian Rhapsody", artist: "Queen", file: "/audio/bohemian.mp3", duration: "5:55" },
-    { title: "Hotel California", artist: "Eagles", file: "/audio/hotel.mp3", duration: "6:30" },
-    { title: "Stairway to Heaven", artist: "Led Zeppelin", file: "/audio/stairway.mp3", duration: "8:02" },
-    { title: "Sweet Child O' Mine", artist: "Guns N' Roses", file: "/audio/sweetchild.mp3", duration: "5:03" },
-    { title: "Don't Stop Believin'", artist: "Journey", file: "/audio/dontstop.mp3", duration: "4:10" }
+    {
+      title: "Chill Jazz Beat",
+      artist: "Demo Track",
+      file: "icons/music-page/song1.mp3",
+      duration: "1:40"
+    },
+    {
+      title: "Lofi Chill",
+      artist: "MusicalSmile",
+      file: "icons/music-page/lofi.mp3",
+      duration: "4:22"
+    },
+    {
+      title: "House Vibes",
+      artist: "Alejandro Magaña",
+      file: "icons/music-page/song3house.mp3",
+      duration: "1:42"
+    },
+    {
+      title: "Beautiful Dream",
+      artist: "Diego Nava",
+      file: "icons/music-page/song4beaut.mp3",
+      duration: "1:37"
+    },
+    {
+      title: "Landing",
+      artist: "Grigoriy Nuzhny",
+      file: "icons/music-page/song5.mp3",
+      duration: "2:34"
+    }
   ];
 
   const [currentTrack, setCurrentTrack] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(50);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   const audioRef = useRef(null);
 
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume / 100;
-      if (isPlaying) audioRef.current.play();
-      else audioRef.current.pause();
     }
-  }, [isPlaying, currentTrack, volume]);
+  }, [volume]);
 
-  const handlePlayPause = () => setIsPlaying(prev => !prev);
-  const handleNext = () => setCurrentTrack((prev) => (prev + 1) % playlist.length);
-  const handlePrev = () => setCurrentTrack((prev) => (prev - 1 + playlist.length) % playlist.length);
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.load();
+      setCurrentTime(0);
+      if (isPlaying) {
+        audioRef.current.play().catch(err => {
+          console.error("Playback error:", err);
+          setIsPlaying(false);
+        });
+      }
+    }
+  }, [currentTrack]);
+
+  const handlePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(err => {
+          console.error("Playback error:", err);
+        });
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleNext = () => {
+    setCurrentTrack((prev) => (prev + 1) % playlist.length);
+    setIsPlaying(true);
+  };
+
+  const handlePrev = () => {
+    setCurrentTrack((prev) => (prev - 1 + playlist.length) % playlist.length);
+    setIsPlaying(true);
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleEnded = () => {
+    handleNext();
+  };
+
+  const formatTime = (seconds) => {
+    if (!seconds || isNaN(seconds)) return "0:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   return (
     <div style={containerStyle}>
@@ -43,11 +125,17 @@ function Music() {
         <div style={trackInfoStyle}>
           <div style={trackTitleStyle}>{playlist[currentTrack].title}</div>
           <div style={artistStyle}>{playlist[currentTrack].artist}</div>
-          <div style={timeStyle}>00:00 / {playlist[currentTrack].duration}</div>
+          <div style={timeStyle}>{formatTime(currentTime)} / {formatTime(duration)}</div>
         </div>
 
         {/* Audio element */}
-        <audio ref={audioRef} src={playlist[currentTrack].file} />
+        <audio
+          ref={audioRef}
+          src={playlist[currentTrack].file}
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={handleLoadedMetadata}
+          onEnded={handleEnded}
+        />
 
         {/* Visualizer */}
         <div style={visualizerStyle}>
