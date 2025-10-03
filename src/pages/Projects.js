@@ -18,7 +18,6 @@ export default function Projects() {
       });
   }, []);
 
-  if (loading) return <p style={{ textAlign: "center", color: "#000080" }}>Loading projects...</p>;
   if (loading) {
     return (
       <div style={loadingContainerStyle}>
