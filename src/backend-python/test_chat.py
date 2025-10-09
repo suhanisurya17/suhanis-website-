@@ -12,7 +12,7 @@ print("File exists:", env_path.exists())
 load_dotenv(dotenv_path=env_path)
 
 # Configure Gemini API
-GEMINI_API_KEY = os.getenv('GwEMINI_API_KEY')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 print("API Key loaded:", "Yes" if GEMINI_API_KEY else "No")
 if GEMINI_API_KEY:
     print("API Key length:", len(GEMINI_API_KEY))
