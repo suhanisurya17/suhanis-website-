@@ -798,6 +798,7 @@ function App() {
         <DesktopIcon label="Photos" icon="/icons/image-viewer.png" onClick={() => toggleWindow("photos", "visible")} />
         <DesktopIcon label="Email" icon="/icons/email.png" onClick={() => toggleWindow("email", "visible")} />
         <DesktopIcon label="Stocks" icon="/icons/stocks.png" onClick={() => toggleWindow("stocks", "visible")} />
+        <DesktopIcon label="Time Machine" icon="/icons/file.png" onClick={() => toggleWindow("timemachine", "visible")} />
       </div>
 
       {/* SusuBot & Time Machine Icons - Positioned separately for better visibility */}
@@ -826,6 +827,7 @@ function App() {
       {renderWindow("music", Music)}
       {renderWindow("photos", Photos)}
       {renderWindow("email", Email)}
+      {renderWindow("timemachine", TimeMachine)}
       {renderWindow("stocks", Stocks)}
       {renderWindow("susubot", SusuBot)}
       {renderWindow("timemachine", TimeMachine)}

@@ -17,7 +17,8 @@ function Photos() {
   return (
     <div
       style={{
-        width: '600px',
+        width: '100%',
+        maxWidth: '600px',
         margin: '0 auto',
         backgroundColor: '#c0c0c0',
         border: '2px outset #c0c0c0',
@@ -96,7 +97,9 @@ function Photos() {
         </span>
       </div>
 
-      <div><p>snapshots of my little life in university!</p></div>
+      <div style={{ padding: '4px 8px', margin: '0' }}>
+        <p style={{ margin: '4px 0' }}>snapshots of my little life in university!</p>
+      </div>
 
       {/* Photo Display Area */}
       <div
@@ -106,7 +109,6 @@ function Photos() {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          minHeight: '400px',
         }}
       >
         <div
@@ -118,8 +120,8 @@ function Photos() {
             justifyContent: 'center',
             alignItems: 'center',
             width: '100%',
-            maxWidth: '500px',
-            height: '350px',
+            height: 'auto',
+            maxHeight: '60vh',
           }}
         >
           <img
@@ -127,7 +129,10 @@ function Photos() {
             alt=""
             style={{
               maxWidth: '100%',
-              maxHeight: '100%',
+              maxHeight: '60vh',
+              height: 'auto',
+              width: 'auto',
+              display: 'block',
               objectFit: 'contain',
             }}
           />

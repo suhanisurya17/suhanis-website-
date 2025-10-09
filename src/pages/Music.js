@@ -52,14 +52,68 @@ function Music() {
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume / 100;
-      if (isPlaying) audioRef.current.play();
-      else audioRef.current.pause();
     }
-  }, [isPlaying, currentTrack, volume]);
+  }, [volume]);
 
-  const handlePlayPause = () => setIsPlaying(prev => !prev);
-  const handleNext = () => setCurrentTrack((prev) => (prev + 1) % playlist.length);
-  const handlePrev = () => setCurrentTrack((prev) => (prev - 1 + playlist.length) % playlist.length);
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.load();
+      setCurrentTime(0);
+      if (isPlaying) {
+        audioRef.current.play().catch(err => {
+          console.error("Playback error:", err);
+          setIsPlaying(false);
+        });
+      }
+    }
+  }, [currentTrack, isPlaying]);
+
+  const handlePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(err => {
+          console.error("Playback error:", err);
+        });
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleNext = () => {
+    setCurrentTrack((prev) => (prev + 1) % playlist.length);
+    setIsPlaying(true);
+  };
+
+  const handlePrev = () => {
+    setCurrentTrack((prev) => (prev - 1 + playlist.length) % playlist.length);
+    setIsPlaying(true);
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleEnded = () => {
+    handleNext();
+  };
+
+  const formatTime = (seconds) => {
+    if (!seconds || isNaN(seconds)) return "0:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const openSpotify = () => {
     if (playlist[currentTrack]?.spotifyUrl && playlist[currentTrack].spotifyUrl !== "#") {
