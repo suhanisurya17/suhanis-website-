@@ -1,78 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './ErrorAnimations.css';
 
 const RandomErrorSystem = () => {
   const [currentError, setCurrentError] = useState(null);
   const [showError, setShowError] = useState(false);
 
-  const cuteErrors = [
-    {
-      title: "Oops! 🐛",
-      message: "Your awesomeness levels are too high for this system to handle!",
-      icon: "⚠️",
-      details: "Error Code: TOO_AWESOME_404"
-    },
-    {
-      title: "Coffee Break Required ☕",
-      message: "This website needs more caffeine to function properly.",
-      icon: "💻",
-      details: "Error Code: CAFFEINE_LOW_001"
-    },
-    {
-      title: "Cat on Keyboard 🐱",
-      message: "A virtual cat has walked across the keyboard. Please try again.",
-      icon: "🚫",
-      details: "Error Code: MEOW_MEOW_123"
-    },
-    {
-      title: "Time Travel Error ⏰",
-      message: "You've gone back to 1998! Everything is working as intended.",
-      icon: "⚠️",
-      details: "Error Code: Y2K_NOSTALGIA"
-    },
-    {
-      title: "Dial-up Connection 📞",
-      message: "Please wait 5 minutes for this page to load... just kidding!",
-      icon: "💻",
-      details: "Error Code: 56K_MODEM_SLOW"
-    },
-    {
-      title: "Floppy Disk Full 💾",
-      message: "Cannot save your amazingness. Disk capacity: 1.44MB exceeded.",
-      icon: "🚫",
-      details: "Error Code: DISK_FULL_1998"
-    },
-    {
-      title: "Blue Screen of Happiness 💙",
-      message: "This website is so retro, it makes us nostalgically happy!",
-      icon: "⚠️",
-      details: "Error Code: HAPPY_NOSTALGIA"
-    },
-    {
-      title: "Clippy Interference 📎",
-      message: "It looks like you're browsing a portfolio! Would you like help?",
-      icon: "💻",
-      details: "Error Code: CLIPPY_DETECTED"
-    },
-    {
-      title: "Millennium Bug 🪲",
-      message: "Don't worry, we've already survived Y2K once!",
-      icon: "🚫",
-      details: "Error Code: Y2K_SURVIVOR"
-    },
-    {
-      title: "Windows ME Moment 🤕",
-      message: "This error is brought to you by Windows ME... just kidding, this actually works!",
-      icon: "⚠️",
-      details: "Error Code: NOT_WINDOWS_ME"
-    }
-  ];
-
-  const triggerRandomError = () => {
+  const triggerRandomError = useCallback(() => {
+    const cuteErrors = [
+      {
+        title: "Oops! 🐛",
+        message: "Your awesomeness levels are too high for this system to handle!",
+        icon: "⚠️",
+        details: "Error Code: TOO_AWESOME_404"
+      },
+      {
+        title: "Coffee Break Required ☕",
+        message: "This website needs more caffeine to function properly.",
+        icon: "💻",
+        details: "Error Code: CAFFEINE_LOW_001"
+      },
+      {
+        title: "Cat on Keyboard 🐱",
+        message: "A virtual cat has walked across the keyboard. Please try again.",
+        icon: "🚫",
+        details: "Error Code: MEOW_MEOW_123"
+      },
+      {
+        title: "Time Travel Error ⏰",
+        message: "You've gone back to 1998! Everything is working as intended.",
+        icon: "⚠️",
+        details: "Error Code: Y2K_NOSTALGIA"
+      },
+      {
+        title: "Dial-up Connection 📞",
+        message: "Please wait 5 minutes for this page to load... just kidding!",
+        icon: "💻",
+        details: "Error Code: 56K_MODEM_SLOW"
+      },
+      {
+        title: "Floppy Disk Full 💾",
+        message: "Cannot save your amazingness. Disk capacity: 1.44MB exceeded.",
+        icon: "🚫",
+        details: "Error Code: DISK_FULL_1998"
+      },
+      {
+        title: "Blue Screen of Happiness 💙",
+        message: "This website is so retro, it makes us nostalgically happy!",
+        icon: "⚠️",
+        details: "Error Code: HAPPY_NOSTALGIA"
+      },
+      {
+        title: "Clippy Interference 📎",
+        message: "It looks like you're browsing a portfolio! Would you like help?",
+        icon: "💻",
+        details: "Error Code: CLIPPY_DETECTED"
+      },
+      {
+        title: "Millennium Bug 🪲",
+        message: "Don't worry, we've already survived Y2K once!",
+        icon: "🚫",
+        details: "Error Code: Y2K_SURVIVOR"
+      },
+      {
+        title: "Windows ME Moment 🤕",
+        message: "This error is brought to you by Windows ME... just kidding, this actually works!",
+        icon: "⚠️",
+        details: "Error Code: NOT_WINDOWS_ME"
+      }
+    ];
+    
     const randomError = cuteErrors[Math.floor(Math.random() * cuteErrors.length)];
     setCurrentError(randomError);
     setShowError(true);
-  };
+  }, []);
 
   const closeError = () => {
     setShowError(false);
@@ -89,7 +89,7 @@ const RandomErrorSystem = () => {
     }, 45000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [triggerRandomError]);
 
   // Also allow manual triggering for testing
   useEffect(() => {
@@ -102,7 +102,7 @@ const RandomErrorSystem = () => {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, []);
+  }, [triggerRandomError]);
 
   if (!showError || !currentError) return null;
 
