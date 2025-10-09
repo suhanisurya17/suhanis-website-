@@ -6,7 +6,10 @@ import Resume from "./pages/Resume";
 import Music from "./pages/Music";
 import Photos from "./pages/Photos";
 import Email from "./pages/Email";
+import Experience from "./pages/Experience"; // Add this import
+import SusuBot from "./pages/SusuBot";
 import TimeMachine from "./pages/TimeMachine";
+import RandomErrorSystem from "./components/RandomErrorSystem";
 
 //Stocks function
 function Stocks() {
@@ -225,12 +228,14 @@ function App() {
     home: { visible: false, minimized: false, maximized: false, top: 100, left: 100 },
     about: { visible: false, minimized: false, maximized: false, top: 120, left: 150 },
     projects: { visible: false, minimized: false, maximized: false, top: 140, left: 200 },
-    resume: { visible: false, minimized: false, maximized: false, top: 160, left: 250 },
-    music: { visible: false, minimized: false, maximized: false, top: 180, left: 300 },
-    photos: { visible: false, minimized: false, maximized: false, top: 200, left: 350 },
-    email: { visible: false, minimized: false, maximized: false, top: 220, left: 400 },
-    timemachine: { visible: false, minimized: false, maximized: false, top: 100, left: 300 },
-    stocks: { visible: false, minimized: false, maximized: false, top: 240, left: 450 },
+    experience: { visible: false, minimized: false, maximized: false, top: 160, left: 250 }, // Add experience window
+    resume: { visible: false, minimized: false, maximized: false, top: 180, left: 300 },
+    music: { visible: false, minimized: false, maximized: false, top: 200, left: 350 },
+    photos: { visible: false, minimized: false, maximized: false, top: 220, left: 400 },
+    email: { visible: false, minimized: false, maximized: false, top: 240, left: 450 },
+    stocks: { visible: false, minimized: false, maximized: false, top: 260, left: 500 },
+    susubot: { visible: false, minimized: false, maximized: false, top: 280, left: 550 },
+    timemachine: { visible: false, minimized: false, maximized: false, top: 300, left: 600 },
     welcome: { visible: true, minimized: false, maximized: false, top: 200, left: 400 },
   });
 
@@ -409,10 +414,10 @@ function App() {
         {/* Window body */}
         <div
           style={{
-            padding: key === "stocks" ? "0" : "10px",
+            padding: key === "stocks" || key === "experience" ? "0" : "10px",
             flex: 1,
             overflow: "auto",
-            textAlign: key === "stocks" ? "left" : "center",
+            textAlign: key === "stocks" || key === "experience" ? "left" : "center",
           }}
         >
           {key === "welcome" ? (
@@ -578,7 +583,7 @@ function App() {
         {/* Content */}
         <div style={{ padding: "12px", fontSize: "11px" }}>
           <ul style={{ paddingLeft: "16px", margin: 0, lineHeight: "1.4" }}>
-            <li>Version 1.4 - Improved photos and projects ui + audio tracks</li>
+            <li>Version 1.4 - Added Experience Section</li>
             <li>Version 1.3 - Added Real-time Stocks Dashboard</li>
             <li>Version 1.2 - Improved Inbox UI</li>
             <li>Version 1.1 - Added Sent Items and Drafts</li>
@@ -766,8 +771,9 @@ function App() {
           <div>
             <ul style={{ paddingLeft: "16px", margin: 0, textAlign: "left", lineHeight: "1.4" }}>
               <li>AI Agent Bot</li>
-              <li style={{ color: "#006600", fontWeight: "bold" }}>✓ Just added: Real-time Stocks Dashboard</li>
-              {/* <li>Dark mode theme option</li> */}
+              <li style={{ color: "#006600", fontWeight: "bold" }}>✓ Experience Section Added</li>
+              <li style={{ color: "#006600", fontWeight: "bold" }}>✓ Real-time Stocks Dashboard</li>
+              <li>Dark mode theme option</li>
             </ul>
           </div>
         }
@@ -786,6 +792,7 @@ function App() {
         <DesktopIcon label="Home" icon="/icons/about_me.png" onClick={() => toggleWindow("home", "visible")} />
         <DesktopIcon label="About" icon="/icons/projects.png" onClick={() => toggleWindow("about", "visible")} />
         <DesktopIcon label="Projects" icon="/icons/file.png" onClick={() => toggleWindow("projects", "visible")} />
+        <DesktopIcon label="Experience" icon="/icons/file.png" onClick={() => toggleWindow("experience", "visible")} />
         <DesktopIcon label="Resume" icon="/icons/resume.png" onClick={() => toggleWindow("resume", "visible")} />
         <DesktopIcon label="Music" icon="/icons/music.png" onClick={() => toggleWindow("music", "visible")} />
         <DesktopIcon label="Photos" icon="/icons/image-viewer.png" onClick={() => toggleWindow("photos", "visible")} />
@@ -794,16 +801,36 @@ function App() {
         <DesktopIcon label="Time Machine" icon="/icons/file.png" onClick={() => toggleWindow("timemachine", "visible")} />
       </div>
 
+      {/* SusuBot & Time Machine Icons - Positioned separately for better visibility */}
+      <div style={{
+        position: "absolute",
+        top: "80px",
+        right: "40px",
+        color: "white",
+        fontFamily: "sans-serif",
+        fontSize: "13px",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px"
+      }}>
+        <DesktopIcon label="SusuBot" icon="/icons/notepad.png" onClick={() => toggleWindow("susubot", "visible")} />
+        <DesktopIcon label="Time Machine" icon="/icons/file.png" onClick={() => toggleWindow("timemachine", "visible")} />
+      </div>
+
       {/* Windows */}
       {renderWindow("home", Home)}
       {renderWindow("about", About)}
       {renderWindow("projects", Projects)}
+      {renderWindow("experience", Experience)}
       {renderWindow("resume", Resume)}
       {renderWindow("music", Music)}
       {renderWindow("photos", Photos)}
       {renderWindow("email", Email)}
       {renderWindow("timemachine", TimeMachine)}
       {renderWindow("stocks", Stocks)}
+      {renderWindow("susubot", SusuBot)}
+      {renderWindow("timemachine", TimeMachine)}
       {renderWindow("welcome")}
 
       {/* Taskbar */}
@@ -818,7 +845,7 @@ function App() {
           </button>
           {startMenuOpen && (
             <div style={startMenuStyle}>
-              {["home", "about", "projects", "resume", "music", "photos", "email", "timemachine", "stocks"].map(key => (
+              {["home", "about", "projects", "experience", "resume", "music", "photos", "email", "stocks", "susubot", "timemachine"].map(key => (
                 <div
                   key={key}
                   style={startMenuItem}
@@ -874,6 +901,9 @@ function App() {
           </div>
         </div>
       </div>
+
+      {/* Random Error System */}
+      <RandomErrorSystem />
     </div>
   );
 }
