@@ -815,7 +815,7 @@ function App() {
         gap: "20px"
       }}>
         <DesktopIcon label="SusuBot" icon="/icons/notepad.png" onClick={() => toggleWindow("susubot", "visible")} />
-        <DesktopIcon label="Time Machine" icon="/icons/file.png" onClick={() => toggleWindow("timemachine", "visible")} />
+        {/* <DesktopIcon label="Time Machine" icon="/icons/file.png" onClick={() => toggleWindow("timemachine", "visible")} /> */}
       </div>
 
       {/* Windows */}
@@ -830,7 +830,6 @@ function App() {
       {renderWindow("timemachine", TimeMachine)}
       {renderWindow("stocks", Stocks)}
       {renderWindow("susubot", SusuBot)}
-      {renderWindow("timemachine", TimeMachine)}
       {renderWindow("welcome")}
 
       {/* Taskbar */}
