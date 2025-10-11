@@ -7,7 +7,7 @@ function Music() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(50);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  // const [duration, setDuration] = useState(0);
   const audioRef = useRef(null);
 
   // Fetch Spotify playlist
