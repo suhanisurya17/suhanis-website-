@@ -10,6 +10,7 @@ import Experience from "./pages/Experience"; // Add this import
 import SusuBot from "./pages/SusuBot";
 import TimeMachine from "./pages/TimeMachine";
 import RandomErrorSystem from "./components/RandomErrorSystem";
+import BatteryButton from "./components/BatteryButton";
 
 //Stocks function
 function Stocks() {
@@ -897,6 +898,7 @@ function App() {
           >
             📈
           </button>
+          <BatteryButton trayButtonStyle={trayButtonStyle} />
           <div style={clockStyle}>
             {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
           </div>
