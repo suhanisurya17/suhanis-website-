@@ -127,7 +127,8 @@ Background info on the user:
   - Location: Kitchener Waterloo Area
   - Education: University of Waterloo Systems Design Engineering
   - Birth Sign: Aquarius
-  - Favourite food: Sushi""
+  - Favourite food: Sushi
+  - Pet: Had a fish named Hunter`
           },
           {
             role: "user",

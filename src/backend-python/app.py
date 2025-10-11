@@ -37,8 +37,7 @@ Background info on the user:
 - Education: University of Waterloo Systems Design Engineering
 - Birth Sign: Aquarius
 - Favourite food: Sushi
-
-
+- Pet: Had a fish named Hunter
 """
 
 
