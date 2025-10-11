@@ -583,6 +583,7 @@ function App() {
         {/* Content */}
         <div style={{ padding: "12px", fontSize: "11px" }}>
           <ul style={{ paddingLeft: "16px", margin: 0, lineHeight: "1.4" }}>
+            <li>Version 1.5 - Added Susubot!</li>
             <li>Version 1.4 - Added Experience Section</li>
             <li>Version 1.3 - Added Real-time Stocks Dashboard</li>
             <li>Version 1.2 - Improved Inbox UI</li>
@@ -770,10 +771,10 @@ function App() {
         content={
           <div>
             <ul style={{ paddingLeft: "16px", margin: 0, textAlign: "left", lineHeight: "1.4" }}>
-              <li>AI Agent Bot</li>
-              <li style={{ color: "#006600", fontWeight: "bold" }}>✓ Experience Section Added</li>
-              <li style={{ color: "#006600", fontWeight: "bold" }}>✓ Real-time Stocks Dashboard</li>
+              <li>More interactivity with susubot</li>
               <li>Dark mode theme option</li>
+              <li>Additional projects and portfolio items</li>
+              <li>Improved mobile responsiveness</li>
             </ul>
           </div>
         }
