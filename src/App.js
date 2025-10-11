@@ -797,15 +797,15 @@ function App() {
         <DesktopIcon label="Music" icon="/icons/music.png" onClick={() => toggleWindow("music", "visible")} />
         <DesktopIcon label="Photos" icon="/icons/image-viewer.png" onClick={() => toggleWindow("photos", "visible")} />
         <DesktopIcon label="Email" icon="/icons/email.png" onClick={() => toggleWindow("email", "visible")} />
-        <DesktopIcon label="Stocks" icon="/icons/stocks.png" onClick={() => toggleWindow("stocks", "visible")} />
         <DesktopIcon label="Time Machine" icon="/icons/file.png" onClick={() => toggleWindow("timemachine", "visible")} />
+
       </div>
 
       {/* SusuBot & Time Machine Icons - Positioned separately for better visibility */}
       <div style={{
         position: "absolute",
-        top: "80px",
-        right: "40px",
+        top: "60px",
+        left: "90px",
         color: "white",
         fontFamily: "sans-serif",
         fontSize: "13px",
@@ -814,6 +814,7 @@ function App() {
         flexDirection: "column",
         gap: "20px"
       }}>
+        <DesktopIcon label="Stocks" icon="/icons/stocks.png" onClick={() => toggleWindow("stocks", "visible")} />
         <DesktopIcon label="SusuBot" icon="/icons/notepad.png" onClick={() => toggleWindow("susubot", "visible")} />
         {/* <DesktopIcon label="Time Machine" icon="/icons/file.png" onClick={() => toggleWindow("timemachine", "visible")} /> */}
       </div>
