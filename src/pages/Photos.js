@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function Photos() {
-  const totalPhotos = 30;
+  const totalPhotos = 37;
   const [currentPhoto, setCurrentPhoto] = useState(1);
 
   const handleNext = () => {
@@ -11,6 +11,20 @@ function Photos() {
   const handlePrev = () => {
     setCurrentPhoto(prev => (prev > 1 ? prev - 1 : totalPhotos));
   };
+
+  // Preload adjacent images for instant navigation
+  useEffect(() => {
+    const nextPhoto = currentPhoto < totalPhotos ? currentPhoto + 1 : 1;
+    const prevPhoto = currentPhoto > 1 ? currentPhoto - 1 : totalPhotos;
+
+    // Preload next image
+    const imgNext = new Image();
+    imgNext.src = `/icons/photos-page/pic${nextPhoto}.jpeg`;
+
+    // Preload previous image
+    const imgPrev = new Image();
+    imgPrev.src = `/icons/photos-page/pic${prevPhoto}.jpeg`;
+  }, [currentPhoto, totalPhotos]);
 
   const photoSrc = `/icons/photos-page/pic${currentPhoto}.jpeg`;
 
