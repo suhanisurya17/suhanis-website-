@@ -937,6 +937,7 @@ function App() {
           >
             📈
           </button>
+          <BatteryButton />
           <div style={clockStyle}>
             {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
           </div>
