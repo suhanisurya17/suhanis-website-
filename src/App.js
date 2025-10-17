@@ -243,6 +243,7 @@ function App() {
   const [time, setTime] = useState(new Date());
   const [startMenuOpen, setStartMenuOpen] = useState(false);
   const [dragging, setDragging] = useState(null);
+  const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
 
   // Popups - Updated with animated functionality
   const [showNewFeaturesPopup, setShowNewFeaturesPopup] = useState(false);
@@ -313,12 +314,48 @@ function App() {
 
   const onMouseUp = () => setDragging(null);
 
+  // Handle right-click context menu
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+    setContextMenu({
+      visible: true,
+      x: e.clientX,
+      y: e.clientY,
+    });
+    setStartMenuOpen(false);
+  };
+
+  // Handle context menu actions
+  const handleRefresh = () => {
+    window.location.reload();
+    setContextMenu({ ...contextMenu, visible: false });
+  };
+
+  const handleNewFolder = () => {
+    alert('Create New Folder clicked! (Feature coming soon)');
+    setContextMenu({ ...contextMenu, visible: false });
+  };
+
+  const handleProperties = () => {
+    alert('Desktop Properties:\n\nResolution: ' + window.innerWidth + 'x' + window.innerHeight + '\nTheme: Windows 98');
+    setContextMenu({ ...contextMenu, visible: false });
+  };
+
+  // Close context menu on click
+  const handleClick = () => {
+    if (contextMenu.visible) {
+      setContextMenu({ ...contextMenu, visible: false });
+    }
+  };
+
   useEffect(() => {
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("click", handleClick);
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
+      window.removeEventListener("click", handleClick);
     };
   });
 
@@ -756,6 +793,7 @@ function App() {
   return (
     <div
       className="desktop"
+      onContextMenu={handleContextMenu}
       style={{
         backgroundImage: 'url("icons/wallpaper22.jpeg")',
         backgroundSize: "contain",
@@ -872,6 +910,7 @@ function App() {
         <div style={systemTrayStyle}>
           <button style={trayButtonStyle}>🔊</button>
           <button style={trayButtonStyle}>🌐</button>
+          <button style={trayButtonStyle}>🌐</button>
           {/* Recent updates button in system tray */}
           <button
             style={{
@@ -898,7 +937,6 @@ function App() {
           >
             📈
           </button>
-          <BatteryButton trayButtonStyle={trayButtonStyle} />
           <div style={clockStyle}>
             {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
           </div>
@@ -907,6 +945,17 @@ function App() {
 
       {/* Random Error System */}
       <RandomErrorSystem />
+
+      {/* Context Menu */}
+      <ContextMenu
+        x={contextMenu.x}
+        y={contextMenu.y}
+        visible={contextMenu.visible}
+        onClose={() => setContextMenu({ ...contextMenu, visible: false })}
+        onRefresh={handleRefresh}
+        onNewFolder={handleNewFolder}
+        onProperties={handleProperties}
+      />
     </div>
   );
 }
@@ -917,6 +966,72 @@ function DesktopIcon({ label, icon, onClick }) {
     <div onClick={onClick} style={iconStyle}>
       <img src={icon} alt={label} width="32" />
       <span>{label}</span>
+    </div>
+  );
+}
+
+// Context Menu Component
+function ContextMenu({ x, y, visible, onClose, onRefresh, onNewFolder, onProperties }) {
+  if (!visible) return null;
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        top: y,
+        left: x,
+        backgroundColor: '#c0c0c0',
+        border: '2px outset #c0c0c0',
+        boxShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+        zIndex: 10000,
+        fontFamily: 'MS Sans Serif, sans-serif',
+        fontSize: '11px',
+        minWidth: '150px',
+      }}
+    >
+      <div
+        onClick={onRefresh}
+        style={{
+          padding: '4px 20px 4px 8px',
+          cursor: 'pointer',
+          borderBottom: '1px solid #808080',
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#000080'}
+        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+        onMouseOver={(e) => e.currentTarget.style.color = 'white'}
+        onMouseOut={(e) => e.currentTarget.style.color = 'black'}
+      >
+        🔄 Refresh
+      </div>
+      <div style={{ borderBottom: '1px solid #808080', height: '1px', margin: '2px 0' }} />
+      <div
+        onClick={onNewFolder}
+        style={{
+          padding: '4px 20px 4px 8px',
+          cursor: 'pointer',
+          borderBottom: '1px solid #808080',
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#000080'}
+        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+        onMouseOver={(e) => e.currentTarget.style.color = 'white'}
+        onMouseOut={(e) => e.currentTarget.style.color = 'black'}
+      >
+        📁 New Folder
+      </div>
+      <div style={{ borderBottom: '1px solid #808080', height: '1px', margin: '2px 0' }} />
+      <div
+        onClick={onProperties}
+        style={{
+          padding: '4px 20px 4px 8px',
+          cursor: 'pointer',
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#000080'}
+        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+        onMouseOver={(e) => e.currentTarget.style.color = 'white'}
+        onMouseOut={(e) => e.currentTarget.style.color = 'black'}
+      >
+        📋 Properties
+      </div>
     </div>
   );
 }
