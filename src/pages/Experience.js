@@ -6,39 +6,58 @@ export default function Experience() {
   const experiences = [
     {
       id: 1,
-      company: "Tech Solutions Inc.",
-      position: "Senior Software Developer",
-      period: "2022 - Present",
-      description: "Developed web applications using React and Node.js. Led a team of 5 developers on multiple projects. Implemented CI/CD pipelines and improved code quality standards.",
-      technologies: ["React", "Node.js", "TypeScript", "AWS"],
-      achievements: "Led 3 major product launches"
+      company: "FIRST Robotics",
+      position: "Software Developer",
+      period: "2022",
+      description: "Developed and documented Java-based software to improve robot control, enhancing performance and maintainability.",
+      logo: "🤖",
+      color: "#E74C3C",
+      technologies: ["Java", "Robotics", "Documentation"],
+      achievements: "Improved robot control systems"
     },
     {
       id: 2,
-      company: "Digital Innovations Ltd.",
-      position: "Full Stack Developer",
-      period: "2020 - 2022",
-      description: "Built responsive websites and database systems. Improved application performance by 40%. Collaborated with cross-functional teams to deliver high-quality software solutions.",
-      technologies: ["JavaScript", "Python", "PostgreSQL", "Docker"],
-      achievements: "Reduced load times by 40%"
+      company: "Dairy Queen",
+      position: "Crew Member",
+      period: "2023",
+      description: "Delivered quick, friendly service while managing orders and food prep in a fast-paced environment.",
+      logo: "🍦",
+      color: "#F39C12",
+      technologies: ["Customer Service", "Food Prep", "Team Collaboration"],
+      achievements: "Maintained high service standards"
     },
     {
       id: 3,
-      company: "StartUp Dynamics",
-      position: "Junior Developer",
-      period: "2018 - 2020",
-      description: "Maintained legacy systems and developed new features. Collaborated with design team on UI/UX improvements. Participated in code reviews and agile development processes.",
-      technologies: ["HTML/CSS", "JavaScript", "PHP", "MySQL"],
-      achievements: "Delivered 15+ feature releases"
+      company: "The Food Society",
+      position: "Social Media and Marketing Intern",
+      period: "2024",
+      description: "Grew social media reach by creating engaging content and optimizing strategy based on performance analytics.",
+      logo: "🌱",
+      color: "#27AE60",
+      technologies: ["Social Media", "Content Creation", "Analytics"],
+      achievements: "Increased social media engagement"
     },
     {
       id: 4,
-      company: "CodeCraft Agency",
-      position: "Frontend Intern",
-      period: "2017 - 2018",
-      description: "Assisted in building client websites and learned modern web development practices. Worked closely with senior developers to understand best practices and coding standards.",
-      technologies: ["HTML", "CSS", "JavaScript", "Bootstrap"],
-      achievements: "Completed 8 client projects"
+      company: "HATCH",
+      position: "Rail Systems Engineering Intern",
+      period: "2025",
+      description: "Supported engineering teams by maintaining internal tools and virtual lab environments while gaining hands-on experience with rail technologies, systems design, and project workflows.",
+      logo: "🚆",
+      color: "#E74C3C",
+      technologies: ["Rail Systems", "Virtual Labs", "Engineering Tools"],
+      achievements: "Supported critical infrastructure projects"
+    },
+    {
+      id: 5,
+      company: "SS&C Technologies",
+      position: "Software Engineering Intern",
+      period: "2025",
+      description: "Developing software solutions and gaining experience in financial technology systems.",
+      logo: "💻",
+      color: "#3498DB",
+      technologies: ["Software Development", "FinTech", "System Design"],
+      achievements: "Contributing to financial technology solutions"
     }
   ];
 
@@ -73,6 +92,7 @@ export default function Experience() {
               textDecoration: "none",
               color: "black",
               border: "2px inset #fff",
+              borderLeft: `6px solid ${exp.color}`,
               borderRadius: "2px",
               padding: "12px",
               width: "220px",
@@ -85,14 +105,19 @@ export default function Experience() {
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.border = "2px outset #fff";
+              e.currentTarget.style.borderLeft = `6px solid ${exp.color}`;
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.border = "2px inset #fff";
+              e.currentTarget.style.borderLeft = `6px solid ${exp.color}`;
             }}
           >
-            <h3 style={{ margin: "0 0 6px 0", fontSize: "13px" }}>
-              {exp.position}
-            </h3>
+            <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
+              <span style={{ fontSize: "24px", marginRight: "8px" }}>{exp.logo}</span>
+              <h3 style={{ margin: "0", fontSize: "13px" }}>
+                {exp.position}
+              </h3>
+            </div>
             <p style={{ flexGrow: 1, fontSize: "11px", margin: "0 0 6px 0" }}>
               {exp.company}
             </p>
@@ -105,7 +130,7 @@ export default function Experience() {
               }}
             >
               <span>{exp.period}</span>
-              <span>💼 {exp.technologies.length} techs</span>
+              <span>💼 {exp.technologies.length} skills</span>
             </div>
           </div>
         ))}
@@ -178,24 +203,29 @@ export default function Experience() {
 
             {/* Dialog Content */}
             <div style={{ padding: "16px" }}>
-              <h3
-                style={{
-                  margin: "0 0 8px 0",
-                  fontSize: "13px",
-                  fontWeight: "bold",
-                }}
-              >
-                {selectedExperience.position}
-              </h3>
-              <p
-                style={{
-                  margin: "0 0 8px 0",
-                  fontSize: "12px",
-                  color: "#000080",
-                }}
-              >
-                {selectedExperience.company} • {selectedExperience.period}
-              </p>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
+                <span style={{ fontSize: "32px", marginRight: "12px" }}>{selectedExperience.logo}</span>
+                <div>
+                  <h3
+                    style={{
+                      margin: "0 0 4px 0",
+                      fontSize: "13px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {selectedExperience.position}
+                  </h3>
+                  <p
+                    style={{
+                      margin: "0",
+                      fontSize: "12px",
+                      color: "#000080",
+                    }}
+                  >
+                    {selectedExperience.company} • {selectedExperience.period}
+                  </p>
+                </div>
+              </div>
 
               <div
                 style={{
@@ -212,7 +242,7 @@ export default function Experience() {
 
               <div style={{ margin: "8px 0" }}>
                 <p style={{ margin: "0 0 4px 0", fontSize: "11px", fontWeight: "bold" }}>
-                  Technologies:
+                  Skills & Technologies:
                 </p>
                 <div
                   style={{
