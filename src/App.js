@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Projects from "./pages/Projects";
+import DesignProjects from "./pages/DesignProjects";
 import Resume from "./pages/Resume";
 import Music from "./pages/Music";
 import Photos from "./pages/Photos";
 import Email from "./pages/Email";
-import Experience from "./pages/Experience"; // Add this import
+import Experience from "./pages/Experience";
 import SusuBot from "./pages/SusuBot";
-import TimeMachine from "./pages/TimeMachine";
 import RandomErrorSystem from "./components/RandomErrorSystem";
 import BatteryButton from "./components/BatteryButton";
 
@@ -229,14 +229,14 @@ function App() {
     home: { visible: false, minimized: false, maximized: false, top: 100, left: 100 },
     about: { visible: false, minimized: false, maximized: false, top: 120, left: 150 },
     projects: { visible: false, minimized: false, maximized: false, top: 140, left: 200 },
-    experience: { visible: false, minimized: false, maximized: false, top: 160, left: 250 }, // Add experience window
-    resume: { visible: false, minimized: false, maximized: false, top: 180, left: 300 },
-    music: { visible: false, minimized: false, maximized: false, top: 200, left: 350 },
-    photos: { visible: false, minimized: false, maximized: false, top: 220, left: 400 },
-    email: { visible: false, minimized: false, maximized: false, top: 240, left: 450 },
-    stocks: { visible: false, minimized: false, maximized: false, top: 260, left: 500 },
-    susubot: { visible: false, minimized: false, maximized: false, top: 280, left: 550 },
-    timemachine: { visible: false, minimized: false, maximized: false, top: 300, left: 600 },
+    designprojects: { visible: false, minimized: false, maximized: false, top: 160, left: 250 },
+    experience: { visible: false, minimized: false, maximized: false, top: 180, left: 300 }, // Add experience window
+    resume: { visible: false, minimized: false, maximized: false, top: 200, left: 350 },
+    music: { visible: false, minimized: false, maximized: false, top: 220, left: 400 },
+    photos: { visible: false, minimized: false, maximized: false, top: 240, left: 450 },
+    email: { visible: false, minimized: false, maximized: false, top: 260, left: 500 },
+    stocks: { visible: false, minimized: false, maximized: false, top: 280, left: 550 },
+    susubot: { visible: false, minimized: false, maximized: false, top: 300, left: 600 },
     welcome: { visible: true, minimized: false, maximized: false, top: 200, left: 400 },
   });
 
@@ -414,8 +414,8 @@ function App() {
           <span>
             {key === "welcome"
               ? "Windows 98"
-              : key === "timemachine"
-              ? "Time Machine"
+              : key === "designprojects"
+              ? "Design Projects"
               : key.charAt(0).toUpperCase() + key.slice(1)}
           </span>
 
@@ -832,16 +832,15 @@ function App() {
         <DesktopIcon label="Home" icon="/icons/about_me.png" onClick={() => toggleWindow("home", "visible")} />
         <DesktopIcon label="About" icon="/icons/projects.png" onClick={() => toggleWindow("about", "visible")} />
         <DesktopIcon label="Projects" icon="/icons/file.png" onClick={() => toggleWindow("projects", "visible")} />
+        <DesktopIcon label="Design Projects" icon="/icons/projects.png" onClick={() => toggleWindow("designprojects", "visible")} />
         <DesktopIcon label="Experience" icon="/icons/file.png" onClick={() => toggleWindow("experience", "visible")} />
         <DesktopIcon label="Resume" icon="/icons/resume.png" onClick={() => toggleWindow("resume", "visible")} />
         <DesktopIcon label="Music" icon="/icons/music.png" onClick={() => toggleWindow("music", "visible")} />
         <DesktopIcon label="Photos" icon="/icons/image-viewer.png" onClick={() => toggleWindow("photos", "visible")} />
         <DesktopIcon label="Email" icon="/icons/email.png" onClick={() => toggleWindow("email", "visible")} />
-        <DesktopIcon label="Time Machine" icon="/icons/file.png" onClick={() => toggleWindow("timemachine", "visible")} />
-
       </div>
 
-      {/* SusuBot & Time Machine Icons - Positioned separately for better visibility */}
+      {/* Stocks & SusuBot Icons - Positioned separately for better visibility */}
       <div style={{
         position: "absolute",
         top: "60px",
@@ -856,19 +855,18 @@ function App() {
       }}>
         <DesktopIcon label="Stocks" icon="/icons/stocks.png" onClick={() => toggleWindow("stocks", "visible")} />
         <DesktopIcon label="SusuBot" icon="/icons/notepad.png" onClick={() => toggleWindow("susubot", "visible")} />
-        {/* <DesktopIcon label="Time Machine" icon="/icons/file.png" onClick={() => toggleWindow("timemachine", "visible")} /> */}
       </div>
 
       {/* Windows */}
       {renderWindow("home", Home)}
       {renderWindow("about", About)}
       {renderWindow("projects", Projects)}
+      {renderWindow("designprojects", DesignProjects)}
       {renderWindow("experience", Experience)}
       {renderWindow("resume", Resume)}
       {renderWindow("music", Music)}
       {renderWindow("photos", Photos)}
       {renderWindow("email", Email)}
-      {renderWindow("timemachine", TimeMachine)}
       {renderWindow("stocks", Stocks)}
       {renderWindow("susubot", SusuBot)}
       {renderWindow("welcome")}
@@ -885,7 +883,7 @@ function App() {
           </button>
           {startMenuOpen && (
             <div style={startMenuStyle}>
-              {["home", "about", "projects", "experience", "resume", "music", "photos", "email", "stocks", "susubot", "timemachine"].map(key => (
+              {["home", "about", "projects", "designprojects", "experience", "resume", "music", "photos", "email", "stocks", "susubot"].map(key => (
                 <div
                   key={key}
                   style={startMenuItem}
@@ -894,7 +892,7 @@ function App() {
                     setStartMenuOpen(false);
                   }}
                 >
-                  {key === "timemachine" ? "Time Machine" : key.charAt(0).toUpperCase() + key.slice(1)}
+                  { key === "designprojects" ? "Design Projects" : key.charAt(0).toUpperCase() + key.slice(1)}
                 </div>
               ))}
             </div>
@@ -937,7 +935,7 @@ function App() {
           >
             📈
           </button>
-          <BatteryButton />
+          <BatteryButton trayButtonStyle={trayButtonStyle} />
           <div style={clockStyle}>
             {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
           </div>
