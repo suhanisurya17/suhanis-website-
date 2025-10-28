@@ -38,17 +38,19 @@ export default function DesignProjects() {
       date: "2024-01-20",
       images: ["/icons/designprojects-page/cloakify.jpeg"]
     },
-    // {
-    //   id: 4,
-    //   name: "Architectural Visualization",
-    //   type: "folder",
-    //   icon: "🏗️",
-    //   description: "Photorealistic architectural rendering of modern building.",
-    //   details: "Created detailed architectural visualization with realistic lighting, materials, and environment. Includes interior and exterior renders with atmospheric effects.",
-    //   tags: ["Blender", "Architecture", "Rendering"],
-    //   date: "2023-12-08",
-    //   images: ["/icons/projects.png"]
-    // },
+    {
+      id: 4,
+      name: "Kitchen Nova",
+      type: "folder",
+      icon: "🏗️",
+      description: "Full-stack kitchen management web app built with React and MongoDB.",
+      details: "Developed a responsive web platform for organizing recipes, tracking ingredients, and managing kitchen tasks. Designed the interface in Figma with a focus on intuitive navigation and modern visuals. Integrated a MongoDB database for scalable data storage and implemented dynamic front-end interactions with React and RESTful APIs.",
+      tags: ["React", "MongoDB", "Figma", "Full-Stack Development", "UI/UX Design"],
+      date: "2023-12-08",
+      images: ["/icons/designprojects-page/kitchennova1.png"]
+    },
+
+
     // {
     //   id: 5,
     //   name: "Robot Arm Design",
