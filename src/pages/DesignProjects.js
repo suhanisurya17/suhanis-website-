@@ -7,59 +7,92 @@ export default function DesignProjects() {
   const projects = [
     {
       id: 1,
-      name: "Brand Identity Design",
+      name: "Range Rover Assembly",
       type: "folder",
-      icon: "📁",
-      description: "Complete brand identity package including logo, color palette, and typography guidelines.",
-      details: "Created for a tech startup looking to establish their visual identity. The project included logo variations, brand guidelines, and marketing materials.",
-      tags: ["Branding", "Logo Design", "Typography"],
-      date: "2024-01-15",
-      images: ["/icons/projects.png"]
+      icon: "⚙️",
+      description: "Dynamic CAD assembly simulating the mechanical systems of a Range Rover.",
+      details: "Built a visually detailed and mechanically accurate 3D assembly with over 14 parts. Presented through animated exploded views and rendered visuals to demonstrate mechanical interaction and assembly workflow.",
+      tags: ["SolidWorks", "CAD", "Mechanical Design"],
+      date: "2024-03-15",
+      images: ["/icons/designprojects-page/rangerover.png"]
     },
     {
       id: 2,
-      name: "Mobile App UI",
+      name: "Kettle Solidworks Part",
       type: "folder",
-      icon: "📱",
-      description: "User interface design for a social media mobile application.",
-      details: "Designed a modern, intuitive interface focusing on user experience and accessibility. Includes wireframes, mockups, and interactive prototypes.",
-      tags: ["UI Design", "Mobile", "Figma"],
-      date: "2024-02-20",
-      images: ["/icons/file.png"]
+      icon: "🔧",
+      description: "Parametric 3D model of a household kettle.",
+      details: "Designed a consumer kettle with sleek contours and intuitive usability. Focused on ergonomic comfort, sustainability, and efficient assembly. Modeled all components parametrically in SolidWorks and validated durability",
+      tags: ["SolidWorks", "Product Design", "Engineering"],
+      date: "2024-02-10",
+      images: ["/icons/designprojects-page/kettle.png"]
     },
     {
       id: 3,
-      name: "Website Redesign",
+      name: "Cloakify: Invisibility Cloak",
       type: "folder",
-      icon: "🌐",
-      description: "Complete website redesign for an e-commerce platform.",
-      details: "Modernized the user experience with improved navigation, responsive design, and enhanced visual hierarchy.",
-      tags: ["Web Design", "UX", "Responsive"],
-      date: "2024-03-10",
-      images: ["/icons/projects.png"]
+      icon: "🎭",
+      description: "Computer vision–based invisibility cloak using Python and OpenCV.",
+      details: "Developed a real-time image-processing system that detects a target color in live video and replaces it with background pixels to create an invisibility effect. Implemented background subtraction, color masking, and contour filtering for smooth visual blending. Demonstrates core concepts in OpenCV, frame differencing, and computer vision pipelines.",
+      tags: ["Python", "OpenCV", "Computer Vision", "Image Processing"],
+      date: "2024-01-20",
+      images: ["/icons/designprojects-page/cloakify.jpeg"]
     },
-    {
-      id: 4,
-      name: "Poster Series",
-      type: "folder",
-      icon: "🎨",
-      description: "Collection of promotional posters for music events.",
-      details: "Designed a series of eye-catching posters combining bold typography and vibrant imagery.",
-      tags: ["Graphic Design", "Print", "Typography"],
-      date: "2023-12-05",
-      images: ["/icons/image-viewer.png"]
-    },
-    {
-      id: 5,
-      name: "Icon Pack",
-      type: "folder",
-      icon: "⭐",
-      description: "Custom icon set with 50+ unique icons.",
-      details: "Created a cohesive icon pack suitable for web and mobile applications. Available in multiple sizes and formats.",
-      tags: ["Icon Design", "Vector", "UI Elements"],
-      date: "2024-01-30",
-      images: ["/icons/file.png"]
-    }
+    // {
+    //   id: 4,
+    //   name: "Architectural Visualization",
+    //   type: "folder",
+    //   icon: "🏗️",
+    //   description: "Photorealistic architectural rendering of modern building.",
+    //   details: "Created detailed architectural visualization with realistic lighting, materials, and environment. Includes interior and exterior renders with atmospheric effects.",
+    //   tags: ["Blender", "Architecture", "Rendering"],
+    //   date: "2023-12-08",
+    //   images: ["/icons/projects.png"]
+    // },
+    // {
+    //   id: 5,
+    //   name: "Robot Arm Design",
+    //   type: "folder",
+    //   icon: "🤖",
+    //   description: "Articulated robot arm with servo motor integration.",
+    //   details: "Engineered a multi-axis robot arm with accurate joint modeling and motion simulation. Designed for 3D printing with optimized part assembly.",
+    //   tags: ["SolidWorks", "Robotics", "Simulation"],
+    //   date: "2024-04-05",
+    //   images: ["/icons/file.png"]
+    // },
+    // {
+    //   id: 6,
+    //   name: "Abstract Animation",
+    //   type: "folder",
+    //   icon: "🎨",
+    //   description: "Procedural animation with geometric patterns.",
+    //   details: "Created an animated sequence using procedural modeling and shader nodes. Features dynamic geometry, particle systems, and color gradients.",
+    //   tags: ["Blender", "Animation", "Procedural"],
+    //   date: "2024-03-28",
+    //   images: ["/icons/image-viewer.png"]
+    // },
+    // {
+    //   id: 7,
+    //   name: "Drone Frame Design",
+    //   type: "folder",
+    //   icon: "🚁",
+    //   description: "Lightweight carbon fiber drone frame assembly.",
+    //   details: "Designed an optimized quadcopter frame with aerodynamic considerations and mounting points for electronics. Includes stress analysis and weight calculations.",
+    //   tags: ["SolidWorks", "Drone", "Aerospace"],
+    //   date: "2023-11-15",
+    //   images: ["/icons/file.png"]
+    // },
+    // {
+    //   id: 8,
+    //   name: "Product Visualization",
+    //   type: "folder",
+    //   icon: "💎",
+    //   description: "Commercial product renders for marketing materials.",
+    //   details: "Produced high-quality product visualization renders with studio lighting setup. Optimized for web and print marketing with multiple angle variants.",
+    //   tags: ["Blender", "Product Viz", "Marketing"],
+    //   date: "2024-02-22",
+    //   images: ["/icons/projects.png"]
+    // }
   ];
 
   const handleProjectClick = (project) => {
