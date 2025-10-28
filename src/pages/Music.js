@@ -153,6 +153,17 @@ function Music() {
 onTimeUpdate={() => setCurrentTime(Math.floor(audioRef.current?.currentTime || 0))}
         onEnded={handleNext}
       />
+
+      <div style={footerStyle}>
+  <a
+    href="https://open.spotify.com/playlist/4YN0iqHkYeHaD4Xa5oRMnr"
+    target="_blank"
+    rel="noopener noreferrer"
+    style={footerLinkStyle}
+  >
+    🎧 Open My Spotify Playlist
+  </a>
+</div>
     </div>
   );
 }
@@ -168,7 +179,30 @@ const containerStyle = {
   flexDirection: "column",
   width: "400px",
   margin: "auto",
+
+  
 };
+
+const footerStyle = {
+  backgroundColor: "#C0C0C0",
+  padding: "4px 8px",
+  borderTop: "1px solid #808080",
+  textAlign: "center",
+};
+
+const footerLinkStyle = {
+  color: "#000080",
+  textDecoration: "none",
+  fontWeight: "bold",
+  fontSize: "11px",
+};
+
+footerLinkStyle[':hover'] = {
+  textDecoration: "underline",
+};
+
+
+
 const menuBarStyle = { backgroundColor: "#C0C0C0", borderBottom: "1px solid #808080", padding: "4px 8px", display: "flex", gap: "16px" };
 const menuItemStyle = { cursor: "pointer", padding: "2px 8px" };
 const displayAreaStyle = { backgroundColor: "#000", color: "#0F0", padding: "8px", margin: "4px", border: "2px inset #C0C0C0", minHeight: "80px", fontFamily: "monospace", fontSize: "12px" };
