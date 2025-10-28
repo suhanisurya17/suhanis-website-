@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// import ModelViewer from "../components/ModelViewer"; // Temporarily commented until dependencies are installed
 
 export default function DesignProjects() {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -14,7 +15,8 @@ export default function DesignProjects() {
       details: "Built a visually detailed and mechanically accurate 3D assembly with over 14 parts. Presented through animated exploded views and rendered visuals to demonstrate mechanical interaction and assembly workflow.",
       tags: ["SolidWorks", "CAD", "Mechanical Design"],
       date: "2024-03-15",
-      images: ["/icons/designprojects-page/rangerover.png"]
+      images: ["/icons/designprojects-page/rangerover.png"],
+      modelPath: "/models/rangerover.glb" // Add your GLB file path here
     },
     {
       id: 2,
@@ -25,7 +27,8 @@ export default function DesignProjects() {
       details: "Designed a consumer kettle with sleek contours and intuitive usability. Focused on ergonomic comfort, sustainability, and efficient assembly. Modeled all components parametrically in SolidWorks and validated durability",
       tags: ["SolidWorks", "Product Design", "Engineering"],
       date: "2024-02-10",
-      images: ["/icons/designprojects-page/kettle.png"]
+      images: ["/icons/designprojects-page/kettle.png"],
+      modelPath: "/models/kettle.glb" // Add your GLB file path here
     },
     {
       id: 3,
@@ -49,6 +52,18 @@ export default function DesignProjects() {
       date: "2023-12-08",
       images: ["/icons/designprojects-page/kitchennova1.png"]
     },
+    {
+      id: 5,
+      name: "ChuteDry Pro",
+      type: "folder",
+      icon: "🧺",
+      description: "Smart washer–dryer control interface concept designed in Figma.",
+      details: "Developed a connected appliance interface concept for efficient laundry management. Designed a modern mobile UI in Figma with intuitive controls for wash and dry cycles, real-time status tracking, and quick actions. Focused on enhancing user convenience, reducing interaction friction, and integrating IoT-inspired automation for next-gen home appliances.",
+      tags: ["Figma", "UI/UX Design", "Product Design", "Smart Home", "IoT"],
+      date: "2024-03-22",
+      images: ["/icons/designprojects-page/ChuteDryPro.png"]
+    },
+
 
 
     // {
@@ -207,6 +222,15 @@ export default function DesignProjects() {
                 <div style={detailsValueStyle}>{new Date(selectedProject.date).toLocaleDateString()}</div>
               </div>
 
+              {/* 3D Model Viewer - Temporarily disabled until dependencies are installed */}
+              {/* {selectedProject.modelPath && (
+                <div style={previewSectionStyle}>
+                  <div style={detailsLabelStyle}>3D Model:</div>
+                  <ModelViewer modelPath={selectedProject.modelPath} />
+                </div>
+              )} */}
+
+              {/* Image Preview */}
               <div style={previewSectionStyle}>
                 <div style={detailsLabelStyle}>Preview:</div>
                 <div style={previewImageContainerStyle}>
