@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 function Photos() {
-  const totalPhotos = 37;
+  const totalPhotos = 43;
   const [currentPhoto, setCurrentPhoto] = useState(1);
 
   const handleNext = () => {
