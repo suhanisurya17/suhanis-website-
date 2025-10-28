@@ -7,14 +7,25 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5002;
 
 app.use(cors()); // Allow requests from frontend
 app.use(express.json()); // Parse JSON bodies
 
+// Root endpoint for testing
+app.get("/", (req, res) => {
+  res.json({
+    message: "Backend server is running!",
+    endpoints: [
+      "GET /api/playlist - Get Spotify playlist tracks",
+      "POST /api/chat - Chat with SusuBot"
+    ]
+  });
+});
+
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;      // put in .env
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
-const PLAYLIST_ID = "37i9dQZF1DXcBWIGoYBM5M"; // example playlist
+const PLAYLIST_ID = "4YN0iqHkYeHaD4Xa5oRMnr"; // Your playlist ID
 
 let accessToken = "";
 let tokenExpiresAt = 0;
@@ -61,8 +72,11 @@ app.get("/api/playlist", async (req, res) => {
     const playlist = data.items.map((item) => ({
       title: item.track.name,
       artist: item.track.artists.map((a) => a.name).join(", "),
+      album: item.track.album.name,
+      albumArt: item.track.album.images[0]?.url || null,
       duration: Math.floor(item.track.duration_ms / 1000), // seconds
       spotifyUrl: item.track.external_urls.spotify,
+      trackId: item.track.id, // Add track ID for embedding
     }));
 
     res.json({ playlist });
