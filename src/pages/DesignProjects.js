@@ -63,7 +63,17 @@ export default function DesignProjects() {
       date: "2024-03-22",
       images: ["/icons/designprojects-page/ChuteDryPro.png"]
     },
-
+{
+      id: 6,
+      name: "Compass",
+      type: "folder",
+      icon: "🧭",
+      description: "Smart washer–dryer control interface concept designed in Figma.",
+      details: "Compass is a digital assistant designed to help older adults navigate technology with confidence. By combining clear step-by-step voice guidance, on-screen visual cues, and built-in scam protection, Compass turns confusing digital tasks into simple, manageable actions. It empowers seniors to stay independent online: whether they’re booking appointments, checking emails, or avoiding unsafe pop-ups.",
+      tags: ["Figma", "UI/UX Design", "Product Design", "Product Management", "Entrepreneurship"],
+      date: "2025-11-22",
+      images: ["/icons/designprojects-page/Compass Pitch Deck.mp4"]
+    },
 
 
     // {
@@ -230,18 +240,30 @@ export default function DesignProjects() {
                 </div>
               )} */}
 
-              {/* Image Preview */}
+              {/* Image/Video Preview */}
               <div style={previewSectionStyle}>
                 <div style={detailsLabelStyle}>Preview:</div>
                 <div style={previewImageContainerStyle}>
-                  {selectedProject.images.map((img, index) => (
-                    <img
-                      key={index}
-                      src={img}
-                      alt={`${selectedProject.name} preview ${index + 1}`}
-                      style={previewImageStyle}
-                    />
-                  ))}
+                  {selectedProject.images.map((media, index) => {
+                    const isVideo = media.endsWith('.mp4') || media.endsWith('.webm') || media.endsWith('.mov');
+                    return isVideo ? (
+                      <video
+                        key={index}
+                        controls
+                        style={previewImageStyle}
+                      >
+                        <source src={media} type={`video/${media.split('.').pop()}`} />
+                        Your browser does not support the video tag.
+                      </video>
+                    ) : (
+                      <img
+                        key={index}
+                        src={media}
+                        alt={`${selectedProject.name} preview ${index + 1}`}
+                        style={previewImageStyle}
+                      />
+                    );
+                  })}
                 </div>
               </div>
 
