@@ -9,6 +9,7 @@ import Photos from "./pages/Photos";
 import Email from "./pages/Email";
 import Experience from "./pages/Experience";
 import SusuBot from "./pages/SusuBot";
+import Paint from "./pages/Paint";
 import RandomErrorSystem from "./components/RandomErrorSystem";
 import BatteryButton from "./components/BatteryButton";
 
@@ -237,6 +238,7 @@ function App() {
     email: { visible: false, minimized: false, maximized: false, top: 260, left: 500 },
     stocks: { visible: false, minimized: false, maximized: false, top: 280, left: 550 },
     susubot: { visible: false, minimized: false, maximized: false, top: 300, left: 600 },
+    paint: { visible: false, minimized: false, maximized: false, top: 80, left: 120 },
     welcome: { visible: true, minimized: false, maximized: false, top: 200, left: 400 },
   });
 
@@ -374,14 +376,18 @@ function App() {
               ? "300px"
               : key === "stocks"
                 ? "700px"
-                : "600px",
+                : key === "paint"
+                  ? "900px"
+                  : "600px",
           height: win.maximized
             ? "100%"
             : key === "welcome"
               ? "150px"
               : key === "stocks"
                 ? "450px"
-                : "400px",
+                : key === "paint"
+                  ? "650px"
+                  : "400px",
           position: "absolute",
           top: win.maximized ? 0 : win.top,
           left: win.maximized ? 0 : win.left,
@@ -452,10 +458,10 @@ function App() {
         {/* Window body */}
         <div
           style={{
-            padding: key === "stocks" || key === "experience" ? "0" : "10px",
+            padding: key === "stocks" || key === "experience" || key === "paint" ? "0" : "10px",
             flex: 1,
             overflow: "auto",
-            textAlign: key === "stocks" || key === "experience" ? "left" : "center",
+            textAlign: key === "stocks" || key === "experience" || key === "paint" ? "left" : "center",
           }}
         >
           {key === "welcome" ? (
@@ -838,6 +844,7 @@ function App() {
         <DesktopIcon label="Music" icon="/icons/music.png" onClick={() => toggleWindow("music", "visible")} />
         <DesktopIcon label="Photos" icon="/icons/image-viewer.png" onClick={() => toggleWindow("photos", "visible")} />
         <DesktopIcon label="Email" icon="/icons/email.png" onClick={() => toggleWindow("email", "visible")} />
+        <DesktopIcon label="Paint" icon="/icons/notepad.png" onClick={() => toggleWindow("paint", "visible")} />
       </div>
 
       {/* Stocks & SusuBot Icons - Positioned separately for better visibility */}
@@ -869,6 +876,7 @@ function App() {
       {renderWindow("email", Email)}
       {renderWindow("stocks", Stocks)}
       {renderWindow("susubot", SusuBot)}
+      {renderWindow("paint", Paint)}
       {renderWindow("welcome")}
 
       {/* Taskbar */}
@@ -883,7 +891,7 @@ function App() {
           </button>
           {startMenuOpen && (
             <div style={startMenuStyle}>
-              {["home", "about", "projects", "designprojects", "experience", "resume", "music", "photos", "email", "stocks", "susubot"].map(key => (
+              {["home", "about", "projects", "designprojects", "experience", "resume", "music", "photos", "email", "stocks", "susubot", "paint"].map(key => (
                 <div
                   key={key}
                   style={startMenuItem}
