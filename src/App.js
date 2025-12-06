@@ -382,7 +382,6 @@ function App() {
                   : key === "calculator"
                     ? "320px"
                     : "600px",
-                  : "600px",
           height: win.maximized
             ? "100%"
             : key === "welcome"
