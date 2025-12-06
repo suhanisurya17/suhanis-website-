@@ -11,7 +11,6 @@ import Experience from "./pages/Experience";
 import SusuBot from "./pages/SusuBot";
 import Paint from "./pages/Paint";
 import CameraReviews from "./pages/CameraReviews";
-import RandomErrorSystem from "./components/RandomErrorSystem";
 import BatteryButton from "./components/BatteryButton";
 
 //Stocks function
@@ -956,9 +955,6 @@ function App() {
           </div>
         </div>
       </div>
-
-      {/* Random Error System */}
-      <RandomErrorSystem />
 
       {/* Context Menu */}
       <ContextMenu
