@@ -10,6 +10,7 @@ import Email from "./pages/Email";
 import Experience from "./pages/Experience";
 import SusuBot from "./pages/SusuBot";
 import Paint from "./pages/Paint";
+import CameraReviews from "./pages/CameraReviews";
 import RandomErrorSystem from "./components/RandomErrorSystem";
 import BatteryButton from "./components/BatteryButton";
 
@@ -239,6 +240,7 @@ function App() {
     stocks: { visible: false, minimized: false, maximized: false, top: 280, left: 550 },
     susubot: { visible: false, minimized: false, maximized: false, top: 300, left: 600 },
     paint: { visible: false, minimized: false, maximized: false, top: 80, left: 120 },
+    camerareviews: { visible: false, minimized: false, maximized: false, top: 140, left: 220 },
     welcome: { visible: true, minimized: false, maximized: false, top: 200, left: 400 },
   });
 
@@ -422,6 +424,8 @@ function App() {
               ? "Windows 98"
               : key === "designprojects"
               ? "Design Projects"
+              : key === "camerareviews"
+              ? "Camera Reviews"
               : key.charAt(0).toUpperCase() + key.slice(1)}
           </span>
 
@@ -844,7 +848,7 @@ function App() {
         <DesktopIcon label="Music" icon="/icons/music.png" onClick={() => toggleWindow("music", "visible")} />
         <DesktopIcon label="Photos" icon="/icons/image-viewer.png" onClick={() => toggleWindow("photos", "visible")} />
         <DesktopIcon label="Email" icon="/icons/email.png" onClick={() => toggleWindow("email", "visible")} />
-        <DesktopIcon label="Paint" icon="/icons/notepad.png" onClick={() => toggleWindow("paint", "visible")} />
+        <DesktopIcon label="Paint" icon="/icons/paint_old-0.png" onClick={() => toggleWindow("paint", "visible")} />
       </div>
 
       {/* Stocks & SusuBot Icons - Positioned separately for better visibility */}
@@ -862,6 +866,8 @@ function App() {
       }}>
         <DesktopIcon label="Stocks" icon="/icons/stocks.png" onClick={() => toggleWindow("stocks", "visible")} />
         <DesktopIcon label="SusuBot" icon="/icons/notepad.png" onClick={() => toggleWindow("susubot", "visible")} />
+        <DesktopIcon label="Camera Reviews" icon="/icons/video_mg-1.png" onClick={() => toggleWindow("camerareviews", "visible")} />
+
       </div>
 
       {/* Windows */}
@@ -873,6 +879,7 @@ function App() {
       {renderWindow("resume", Resume)}
       {renderWindow("music", Music)}
       {renderWindow("photos", Photos)}
+      {renderWindow("camerareviews", CameraReviews)}
       {renderWindow("email", Email)}
       {renderWindow("stocks", Stocks)}
       {renderWindow("susubot", SusuBot)}
@@ -891,7 +898,7 @@ function App() {
           </button>
           {startMenuOpen && (
             <div style={startMenuStyle}>
-              {["home", "about", "projects", "designprojects", "experience", "resume", "music", "photos", "email", "stocks", "susubot", "paint"].map(key => (
+              {["home", "about", "projects", "designprojects", "experience", "resume", "music", "photos", "camerareviews", "email", "stocks", "susubot", "paint"].map(key => (
                 <div
                   key={key}
                   style={startMenuItem}
@@ -900,7 +907,7 @@ function App() {
                     setStartMenuOpen(false);
                   }}
                 >
-                  { key === "designprojects" ? "Design Projects" : key.charAt(0).toUpperCase() + key.slice(1)}
+                  { key === "designprojects" ? "Design Projects" : key === "camerareviews" ? "Camera Reviews" : key.charAt(0).toUpperCase() + key.slice(1)}
                 </div>
               ))}
             </div>
