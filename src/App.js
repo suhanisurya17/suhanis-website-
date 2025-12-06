@@ -393,7 +393,6 @@ function App() {
                   : key === "calculator"
                     ? "480px"
                     : "400px",
-                  : "400px",
           position: "absolute",
           top: win.maximized ? 0 : win.top,
           left: win.maximized ? 0 : win.left,
