@@ -10,6 +10,7 @@ import Email from "./pages/Email";
 import Experience from "./pages/Experience";
 import SusuBot from "./pages/SusuBot";
 import Paint from "./pages/Paint";
+import Calculator from "./pages/Calculator";
 import RandomErrorSystem from "./components/RandomErrorSystem";
 import BatteryButton from "./components/BatteryButton";
 
