@@ -10,7 +10,6 @@ import Email from "./pages/Email";
 import Experience from "./pages/Experience";
 import SusuBot from "./pages/SusuBot";
 import Paint from "./pages/Paint";
-import Calculator from "./pages/Calculator";
 import RandomErrorSystem from "./components/RandomErrorSystem";
 import BatteryButton from "./components/BatteryButton";
 
@@ -383,6 +382,7 @@ function App() {
                   : key === "calculator"
                     ? "320px"
                     : "600px",
+                  : "600px",
           height: win.maximized
             ? "100%"
             : key === "welcome"
@@ -394,6 +394,7 @@ function App() {
                   : key === "calculator"
                     ? "480px"
                     : "400px",
+                  : "400px",
           position: "absolute",
           top: win.maximized ? 0 : win.top,
           left: win.maximized ? 0 : win.left,
@@ -468,6 +469,10 @@ function App() {
             flex: 1,
             overflow: "auto",
             textAlign: key === "stocks" || key === "experience" || key === "paint" || key === "calculator" ? "left" : "center",
+            padding: key === "stocks" || key === "experience" || key === "paint" ? "0" : "10px",
+            flex: 1,
+            overflow: "auto",
+            textAlign: key === "stocks" || key === "experience" || key === "paint" ? "left" : "center",
           }}
         >
           {key === "welcome" ? (
