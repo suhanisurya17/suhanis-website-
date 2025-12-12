@@ -11,6 +11,7 @@ import Experience from "./pages/Experience";
 import SusuBot from "./pages/SusuBot";
 import Paint from "./pages/Paint";
 import CameraReviews from "./pages/CameraReviews";
+// import RandomErrorSystem from "./components/RandomErrorSystem";
 import BatteryButton from "./components/BatteryButton";
 
 //Stocks function
@@ -804,11 +805,11 @@ function App() {
       className="desktop"
       onContextMenu={handleContextMenu}
       style={{
-        backgroundImage: 'url("icons/wallpaper22.jpeg")',
+        backgroundImage: 'url("icons/wallpaper2.png")',
         backgroundSize: "contain",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        backgroundColor: "rgba(0, 142, 148)", //rgba(0, 134, 137)
+        backgroundColor: "rgba(0, 134, 137)", //rgba(0, 142, 148),
         height: "100vh",
         width: "100vw",
       }}
@@ -955,6 +956,9 @@ function App() {
           </div>
         </div>
       </div>
+
+      {/* Random Error System
+      <RandomErrorSystem /> */}
 
       {/* Context Menu */}
       <ContextMenu
