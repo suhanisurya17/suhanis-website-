@@ -41,27 +41,49 @@ function SusuBot() {
     setIsTyping(true);
 
     try {
-      const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
+      // Try Ollama first (local, fast, private)
+      let botText = null;
 
-      if (!apiKey) throw new Error('No API key');
-
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-        {
+      try {
+        const ollamaRes = await fetch('http://localhost:11434/api/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: `${SYSTEM_PROMPT}\n\nUser: ${currentInput}` }] }],
-            generationConfig: { maxOutputTokens: 200, temperature: 0.7 },
+            model: 'llama3.2',
+            prompt: `${SYSTEM_PROMPT}\n\nUser: ${currentInput}\nSusuBot:`,
+            stream: false,
           }),
+          signal: AbortSignal.timeout(15000),
+        });
+        if (ollamaRes.ok) {
+          const ollamaData = await ollamaRes.json();
+          botText = ollamaData.response?.trim();
         }
-      );
+      } catch (e) {
+        // Ollama not running — fall through to Gemini
+      }
 
-      const data = await response.json();
+      // Fall back to Gemini if Ollama unavailable
+      if (!botText) {
+        const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
+        if (!apiKey) throw new Error('No API key');
 
-      if (!data.candidates || !data.candidates[0]) throw new Error('No response');
+        const geminiRes = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: `${SYSTEM_PROMPT}\n\nUser: ${currentInput}` }] }],
+              generationConfig: { maxOutputTokens: 200, temperature: 0.7 },
+            }),
+          }
+        );
+        const geminiData = await geminiRes.json();
+        if (!geminiData.candidates?.[0]) throw new Error('No response');
+        botText = geminiData.candidates[0].content.parts[0].text;
+      }
 
-      const botText = data.candidates[0].content.parts[0].text;
       setMessages(prev => [...prev, { id: Date.now() + 1, text: botText, sender: 'bot', timestamp: new Date() }]);
 
     } catch (error) {
@@ -247,7 +269,7 @@ function SusuBot() {
         display: 'flex',
         justifyContent: 'space-between'
       }}>
-        <span>⚡ Powered by Gemini AI</span>
+        <span>⚡ Powered by Ollama (llama3.2) + Gemini fallback</span>
         <span>Messages: {messages.length}</span>
       </div>
     </div>
