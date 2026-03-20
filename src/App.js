@@ -881,7 +881,6 @@ function App() {
         gap: "20px"
       }}>
         <DesktopIcon label="Stocks" icon="/icons/stocks.png" onClick={() => toggleWindow("stocks", "visible")} />
-        <DesktopIcon label="SusuBot" icon="/icons/notepad.png" onClick={() => toggleWindow("susubot", "visible")} />
         <DesktopIcon label="Camera Reviews" icon="/icons/video_mg-1.png" onClick={() => toggleWindow("camerareviews", "visible")} />
 
       </div>
@@ -898,7 +897,6 @@ function App() {
       {renderWindow("camerareviews", CameraReviews)}
       {renderWindow("email", Email)}
       {renderWindow("stocks", Stocks)}
-      {renderWindow("susubot", SusuBot)}
       {renderWindow("paint", Paint)}
       {renderWindow("welcome")}
 
@@ -914,7 +912,7 @@ function App() {
           </button>
           {startMenuOpen && (
             <div style={startMenuStyle}>
-              {["home", "about", "projects", "designprojects", "experience", "resume", "music", "photos", "camerareviews", "email", "stocks", "susubot", "paint"].map(key => (
+              {["home", "about", "projects", "designprojects", "experience", "resume", "music", "photos", "camerareviews", "email", "stocks", "paint"].map(key => (
                 <div
                   key={key}
                   style={startMenuItem}
