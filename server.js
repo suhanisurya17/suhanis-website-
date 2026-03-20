@@ -95,10 +95,38 @@ app.post("/api/chat", async (req, res) => {
       return res.status(400).json({ error: "Message is required" });
     }
 
+    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
     const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
+    const systemPrompt = `You are SusuBot, a friendly AI assistant on a retro Windows 98 themed portfolio website. Keep responses concise (2-3 sentences), helpful, and maintain the retro theme with occasional 90s tech references like floppy disks, dial-up, Clippy, etc.
+
+About the website owner (Suhani Surya):
+  - Aspiring Software Engineer + Product Manager at University of Waterloo (Systems Design Engineering)
+  - Interests: Tech, AI, Music, Travel, Pilates, Fashion
+  - Location: Kitchener Waterloo Area
+  - Birth Sign: Aquarius, Favourite food: Sushi, Had a fish named Hunter`;
+
+    if (GEMINI_API_KEY) {
+      const geminiResponse = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: `${systemPrompt}\n\nUser: ${message}` }] }],
+            generationConfig: { maxOutputTokens: 200, temperature: 0.7 },
+          }),
+        }
+      );
+      const geminiData = await geminiResponse.json();
+      if (geminiData.candidates && geminiData.candidates[0]) {
+        const response = geminiData.candidates[0].content.parts[0].text;
+        return res.json({ response });
+      }
+      throw new Error("Gemini returned no candidates");
+    }
+
     if (!OPENAI_API_KEY) {
-      // Fallback to enhanced predefined responses if no API key
       const enhancedResponses = [
         "That's fascinating! I'm SusuBot, running on this retro Windows 98 system. Tell me more about that!",
         "Interesting perspective! My vintage circuits are processing that information. 🤖",
@@ -110,44 +138,23 @@ app.post("/api/chat", async (req, res) => {
         "My retro algorithms are buzzing with excitement about that topic!",
         "Blue screen of enlightenment activated! That's a wonderful observation.",
         "Computing... computing... Yes, I find that very interesting indeed!",
-        "That's more advanced than my Y2K programming, but I'll do my best to help!",
-        "From my Windows 98 perspective, that's absolutely fascinating to consider.",
-        "My vintage neural networks are lighting up with interest in your question!",
-        "Fascinating! Let me search my nostalgic memory banks for relevant information..."
       ];
-
       const response = enhancedResponses[Math.floor(Math.random() * enhancedResponses.length)];
       return res.json({ response });
     }
 
-    // Use OpenAI API if key is available
+    // Use OpenAI if Gemini key not set
     const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
         messages: [
-          {
-            role: "system",
-            content: `You are SusuBot, a friendly AI assistant running on a retro Windows 98 themed website. You have a nostalgic, tech-savvy personality with references to 90s computing culture. Keep responses concise, helpful, and maintain the retro theme. Use occasional 90s tech references like floppy disks, dial-up, Clippy, etc. Be knowledgeable but maintain the vintage computing charm.
-
-Background info on the user:
-  - Name: Suhani Surya
-  - Occupation: Aspiring Software Engineer + Product Manager
-  - Interests: Tech, AI, Music, Travel, Pilates, Fashion
-  - Location: Kitchener Waterloo Area
-  - Education: University of Waterloo Systems Design Engineering
-  - Birth Sign: Aquarius
-  - Favourite food: Sushi
-  - Pet: Had a fish named Hunter`
-          },
-          {
-            role: "user",
-            content: message
-          }
+          { role: "system", content: systemPrompt },
+          { role: "user", content: message },
         ],
         max_tokens: 150,
         temperature: 0.7,
@@ -155,10 +162,7 @@ Background info on the user:
     });
 
     const data = await openaiResponse.json();
-
-    if (data.error) {
-      throw new Error(data.error.message);
-    }
+    if (data.error) throw new Error(data.error.message);
 
     const response = data.choices[0].message.content;
     res.json({ response });
