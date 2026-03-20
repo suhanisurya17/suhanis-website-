@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Projects from "./pages/Projects";
@@ -228,21 +228,23 @@ function Stocks() {
 
 function App() {
   const [windows, setWindows] = useState({
-    home: { visible: false, minimized: false, maximized: false, top: 100, left: 100 },
-    about: { visible: false, minimized: false, maximized: false, top: 120, left: 150 },
-    projects: { visible: false, minimized: false, maximized: false, top: 140, left: 200 },
-    designprojects: { visible: false, minimized: false, maximized: false, top: 160, left: 250 },
-    experience: { visible: false, minimized: false, maximized: false, top: 180, left: 300 }, // Add experience window
-    resume: { visible: false, minimized: false, maximized: false, top: 200, left: 350 },
-    music: { visible: false, minimized: false, maximized: false, top: 220, left: 400 },
-    photos: { visible: false, minimized: false, maximized: false, top: 240, left: 450 },
-    email: { visible: false, minimized: false, maximized: false, top: 260, left: 500 },
-    stocks: { visible: false, minimized: false, maximized: false, top: 280, left: 550 },
-    susubot: { visible: false, minimized: false, maximized: false, top: 300, left: 600 },
-    paint: { visible: false, minimized: false, maximized: false, top: 80, left: 120 },
-    camerareviews: { visible: false, minimized: false, maximized: false, top: 140, left: 220 },
-    welcome: { visible: true, minimized: false, maximized: false, top: 200, left: 400 },
+    home: { visible: false, minimized: false, maximized: false, top: 100, left: 100, zIndex: 10 },
+    about: { visible: false, minimized: false, maximized: false, top: 120, left: 150, zIndex: 10 },
+    projects: { visible: false, minimized: false, maximized: false, top: 140, left: 200, zIndex: 10 },
+    designprojects: { visible: false, minimized: false, maximized: false, top: 160, left: 250, zIndex: 10 },
+    experience: { visible: false, minimized: false, maximized: false, top: 180, left: 300, zIndex: 10 },
+    resume: { visible: false, minimized: false, maximized: false, top: 200, left: 350, zIndex: 10 },
+    music: { visible: false, minimized: false, maximized: false, top: 220, left: 400, zIndex: 10 },
+    photos: { visible: false, minimized: false, maximized: false, top: 240, left: 450, zIndex: 10 },
+    email: { visible: false, minimized: false, maximized: false, top: 260, left: 500, zIndex: 10 },
+    stocks: { visible: false, minimized: false, maximized: false, top: 280, left: 550, zIndex: 10 },
+    susubot: { visible: false, minimized: false, maximized: false, top: 300, left: 600, zIndex: 10 },
+    paint: { visible: false, minimized: false, maximized: false, top: 80, left: 120, zIndex: 10 },
+    camerareviews: { visible: false, minimized: false, maximized: false, top: 140, left: 220, zIndex: 10 },
+    welcome: { visible: true, minimized: false, maximized: false, top: 200, left: 400, zIndex: 10 },
   });
+
+  const nextZIndexRef = useRef(100);
 
   const [time, setTime] = useState(new Date());
   const [startMenuOpen, setStartMenuOpen] = useState(false);
@@ -293,6 +295,15 @@ function App() {
     setWindows((prev) => ({
       ...prev,
       [key]: { ...prev[key], top, left },
+    }));
+  };
+
+  const focusWindow = (key) => {
+    if (key === "welcome") return;
+    nextZIndexRef.current += 1;
+    setWindows((prev) => ({
+      ...prev,
+      [key]: { ...prev[key], zIndex: nextZIndexRef.current },
     }));
   };
 
@@ -371,6 +382,7 @@ function App() {
       <div
         key={key}
         className="window"
+        onMouseDown={() => focusWindow(key)}
         style={{
           width: win.maximized
             ? "100%"
@@ -393,7 +405,7 @@ function App() {
           position: "absolute",
           top: win.maximized ? 0 : win.top,
           left: win.maximized ? 0 : win.left,
-          zIndex: key === "welcome" ? 9999 : 10,
+          zIndex: key === "welcome" ? 9999 : win.zIndex,
           border: "2px solid #000",
           backgroundColor: "#c0c0c0",
           boxShadow: "2px 2px #fff inset, -2px -2px #808080 inset",
@@ -812,6 +824,10 @@ function App() {
         backgroundColor: "rgba(0, 134, 137)", //rgba(0, 142, 148),
         height: "100vh",
         width: "100vw",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        overflow: "hidden",
       }}
     >
       {/* Bottom-right popup (New Features) */}

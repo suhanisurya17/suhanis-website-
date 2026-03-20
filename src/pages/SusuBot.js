@@ -38,7 +38,7 @@ function SusuBot() {
 
     try {
       // Try to call the AI API
-      const apiUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+      const apiUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5002';
       const response = await fetch(`${apiUrl}/api/chat`, {
         method: 'POST',
         headers: {
