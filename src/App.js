@@ -646,7 +646,6 @@ function App() {
             <li>Version 1.9 - Windows now focus on click (z-index)</li>
             <li>Version 1.8 - Fixed desktop scroll + taskbar on Windows</li>
             <li>Version 1.7 - Camera Reviews added</li>
-            <li>Version 1.6 - Added SusuBot AI (Ollama + Gemini)</li>
             <li>Version 1.5 - Added Experience Section</li>
             <li>Version 1.4 - Real-time Stocks Dashboard</li>
             <li>Version 1.3 - Improved Inbox UI</li>
