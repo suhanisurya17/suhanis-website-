@@ -1,10 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 
+const SYSTEM_PROMPT = `You are SusuBot, a friendly AI assistant on a retro Windows 98 themed portfolio website. Keep responses concise (2-3 sentences max), helpful, and fun. Use occasional 90s tech references like floppy disks, dial-up, Clippy, etc.
+
+About the website owner (Suhani Surya):
+  - Aspiring Software Engineer + Product Manager at University of Waterloo (Systems Design Engineering)
+  - Interests: Tech, AI, Music, Travel, Pilates, Fashion
+  - Location: Kitchener Waterloo Area
+  - Birth Sign: Aquarius, Favourite food: Sushi, Had a fish named Hunter`;
+
 function SusuBot() {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hello! I'm SusuBot, your smart Windows 98 AI assistant! 🤖 I can answer questions, chat about anything, and help you explore this retro website. What would you like to know?",
+      text: "Hello! I'm SusuBot, your Windows 98 AI assistant! 🤖 Ask me anything about Suhani or just chat!",
       sender: 'bot',
       timestamp: new Date()
     }
@@ -13,16 +21,12 @@ function SusuBot() {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleSend = async () => {
-    if (!inputText.trim()) return;
+    if (!inputText.trim() || isTyping) return;
 
     const userMessage = {
       id: Date.now(),
@@ -37,54 +41,42 @@ function SusuBot() {
     setIsTyping(true);
 
     try {
-      // Try to call the AI API
-      const apiUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5002';
-      const response = await fetch(`${apiUrl}/api/chat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: currentInput }),
-      });
+      const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
 
-      if (!response.ok) {
-        throw new Error('API request failed');
-      }
+      if (!apiKey) throw new Error('No API key');
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: `${SYSTEM_PROMPT}\n\nUser: ${currentInput}` }] }],
+            generationConfig: { maxOutputTokens: 200, temperature: 0.7 },
+          }),
+        }
+      );
 
       const data = await response.json();
 
-      const botMessage = {
-        id: Date.now() + 1,
-        text: data.response,
-        sender: 'bot',
-        timestamp: new Date()
-      };
+      if (!data.candidates || !data.candidates[0]) throw new Error('No response');
 
-      setMessages(prev => [...prev, botMessage]);
-      setIsTyping(false);
+      const botText = data.candidates[0].content.parts[0].text;
+      setMessages(prev => [...prev, { id: Date.now() + 1, text: botText, sender: 'bot', timestamp: new Date() }]);
 
     } catch (error) {
-      console.error('Chat API error:', error);
-
-      // Fallback to local responses if API fails
-      const fallbackResponses = [
-        "Sorry, my connection to the AI servers is having trouble! My Windows 98 brain says: That's a great question though!",
-        "Network error! But my local circuits think that's really interesting!",
-        "API timeout! Let me use my vintage knowledge base instead... That's fascinating!",
-        "Server down! But my retro algorithms suggest that's worth exploring further!",
-        "Connection failed! My floppy disk memory says: Tell me more about that!"
+      const fallbacks = [
+        "Sorry, my dial-up connection is acting up! Try again in a sec. 📡",
+        "Blue screen of thought! My circuits need a reboot. Ask me again!",
+        "Oops! My floppy disk got corrupted. Could you repeat that? 💾",
       ];
-
-      const fallbackResponse = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
-
-      const botMessage = {
+      setMessages(prev => [...prev, {
         id: Date.now() + 1,
-        text: fallbackResponse,
+        text: fallbacks[Math.floor(Math.random() * fallbacks.length)],
         sender: 'bot',
         timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, botMessage]);
+      }]);
+    } finally {
       setIsTyping(false);
     }
   };
@@ -97,14 +89,12 @@ function SusuBot() {
   };
 
   const clearChat = () => {
-    setMessages([
-      {
-        id: 1,
-        text: "Chat cleared! I'm SusuBot, your smart AI assistant, ready to help you again. Ask me anything! 🤖",
-        sender: 'bot',
-        timestamp: new Date()
-      }
-    ]);
+    setMessages([{
+      id: 1,
+      text: "Chat cleared! I'm SusuBot, ready to help again. Ask me anything! 🤖",
+      sender: 'bot',
+      timestamp: new Date()
+    }]);
   };
 
   return (
@@ -127,7 +117,7 @@ function SusuBot() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontSize: '16px' }}>🤖</span>
-          <span style={{ fontWeight: 'bold', fontSize: '12px' }}>SusuBot v1.0</span>
+          <span style={{ fontWeight: 'bold', fontSize: '12px' }}>SusuBot v2.0</span>
         </div>
         <button
           onClick={clearChat}
@@ -167,15 +157,13 @@ function SusuBot() {
             <div style={{
               maxWidth: '80%',
               padding: '6px 8px',
-              backgroundColor: message.sender === 'user' ? '#0078d4' : '#f0f0f0',
+              backgroundColor: message.sender === 'user' ? '#000080' : '#f0f0f0',
               color: message.sender === 'user' ? 'white' : 'black',
-              border: message.sender === 'user' ? '2px outset #0078d4' : '2px inset #f0f0f0',
+              border: message.sender === 'user' ? '2px outset #000080' : '2px inset #f0f0f0',
               fontSize: '11px',
               lineHeight: '1.4'
             }}>
-              {message.sender === 'bot' && (
-                <span style={{ marginRight: '6px' }}>🤖</span>
-              )}
+              {message.sender === 'bot' && <span style={{ marginRight: '6px' }}>🤖</span>}
               {message.text}
             </div>
             <div style={{
@@ -190,12 +178,7 @@ function SusuBot() {
         ))}
 
         {isTyping && (
-          <div style={{
-            marginBottom: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}>
+          <div style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>🤖</span>
             <div style={{
               padding: '6px 8px',
@@ -264,7 +247,7 @@ function SusuBot() {
         display: 'flex',
         justifyContent: 'space-between'
       }}>
-        <span>💾 Running on Windows 98 compatibility mode</span>
+        <span>⚡ Powered by Gemini AI</span>
         <span>Messages: {messages.length}</span>
       </div>
     </div>
