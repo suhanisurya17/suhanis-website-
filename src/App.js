@@ -8,7 +8,6 @@ import Music from "./pages/Music";
 import Photos from "./pages/Photos";
 import Email from "./pages/Email";
 import Experience from "./pages/Experience";
-import SusuBot from "./pages/SusuBot";
 import Paint from "./pages/Paint";
 import CameraReviews from "./pages/CameraReviews";
 // import RandomErrorSystem from "./components/RandomErrorSystem";
