@@ -642,13 +642,15 @@ function App() {
         {/* Content */}
         <div style={{ padding: "12px", fontSize: "11px" }}>
           <ul style={{ paddingLeft: "16px", margin: 0, lineHeight: "1.4" }}>
-            <li>Version 1.5 - Added Susubot!</li>
-            <li>Version 1.4 - Added Experience Section</li>
-            <li>Version 1.3 - Added Real-time Stocks Dashboard</li>
-            <li>Version 1.2 - Improved Inbox UI</li>
-            <li>Version 1.1 - Added Sent Items and Drafts</li>
+            <li>Version 2.0 - Paint menus (File, Edit, Image, Help)</li>
+            <li>Version 1.9 - Windows now focus on click (z-index)</li>
+            <li>Version 1.8 - Fixed desktop scroll + taskbar on Windows</li>
+            <li>Version 1.7 - Camera Reviews added</li>
+            <li>Version 1.6 - Added SusuBot AI (Ollama + Gemini)</li>
+            <li>Version 1.5 - Added Experience Section</li>
+            <li>Version 1.4 - Real-time Stocks Dashboard</li>
+            <li>Version 1.3 - Improved Inbox UI</li>
             <li>Version 1.0 - Initial Release</li>
-            <li>Beta 0.9 - Added email compose feature</li>
           </ul>
         </div>
       </div>
@@ -835,10 +837,10 @@ function App() {
         content={
           <div>
             <ul style={{ paddingLeft: "16px", margin: 0, textAlign: "left", lineHeight: "1.4" }}>
-              <li>More interactivity with susubot</li>
+              <li>SusuBot AI chat (coming back soon!)</li>
               <li>Dark mode theme option</li>
-              <li>Additional projects and portfolio items</li>
-              <li>Improved mobile responsiveness</li>
+              <li>More projects and portfolio items</li>
+              <li>Mobile responsiveness improvements</li>
             </ul>
           </div>
         }
