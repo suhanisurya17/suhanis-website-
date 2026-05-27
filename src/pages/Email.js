@@ -66,12 +66,12 @@ export default function Email() {
         cursor: "pointer",
       }}
       onMouseEnter={(e) => {
-        e.target.style.backgroundColor = "#316ac5";
-        e.target.style.color = "white";
+        e.currentTarget.style.backgroundColor = "#316ac5";
+        e.currentTarget.style.color = "white";
       }}
       onMouseLeave={(e) => {
-        e.target.style.backgroundColor = "transparent";
-        e.target.style.color = "black";
+        e.currentTarget.style.backgroundColor = "transparent";
+        e.currentTarget.style.color = "black";
       }}
     >
       {menu}
@@ -137,12 +137,12 @@ export default function Email() {
               }}
               onMouseEnter={(e) => {
                 if (selectedFolder !== folder.name) {
-                  e.target.style.backgroundColor = "#ddeeff";
+                  e.currentTarget.style.backgroundColor = "#ddeeff";
                 }
               }}
               onMouseLeave={(e) => {
                 if (selectedFolder !== folder.name) {
-                  e.target.style.backgroundColor = "transparent";
+                  e.currentTarget.style.backgroundColor = "transparent";
                 }
               }}
             >

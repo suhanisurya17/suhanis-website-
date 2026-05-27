@@ -73,9 +73,9 @@ function Notepad() {
                         cursor: 'pointer',
                         fontFamily: 'MS Sans Serif, sans-serif',
                     }}
-                    onMouseDown={(e) => e.target.style.border = '1px inset #c0c0c0'}
-                    onMouseUp={(e) => e.target.style.border = '1px outset #c0c0c0'}
-                    onMouseLeave={(e) => e.target.style.border = '1px outset #c0c0c0'}
+                    onMouseDown={(e) => e.currentTarget.style.border = '1px inset #c0c0c0'}
+                    onMouseUp={(e) => e.currentTarget.style.border = '1px outset #c0c0c0'}
+                    onMouseLeave={(e) => e.currentTarget.style.border = '1px outset #c0c0c0'}
                 >
                     New
                 </button>
@@ -89,9 +89,9 @@ function Notepad() {
                         cursor: 'pointer',
                         fontFamily: 'MS Sans Serif, sans-serif',
                     }}
-                    onMouseDown={(e) => e.target.style.border = '1px inset #c0c0c0'}
-                    onMouseUp={(e) => e.target.style.border = '1px outset #c0c0c0'}
-                    onMouseLeave={(e) => e.target.style.border = '1px outset #c0c0c0'}
+                    onMouseDown={(e) => e.currentTarget.style.border = '1px inset #c0c0c0'}
+                    onMouseUp={(e) => e.currentTarget.style.border = '1px outset #c0c0c0'}
+                    onMouseLeave={(e) => e.currentTarget.style.border = '1px outset #c0c0c0'}
                 >
                     Open
                 </button>
@@ -105,9 +105,9 @@ function Notepad() {
                         cursor: 'pointer',
                         fontFamily: 'MS Sans Serif, sans-serif',
                     }}
-                    onMouseDown={(e) => e.target.style.border = '1px inset #c0c0c0'}
-                    onMouseUp={(e) => e.target.style.border = '1px outset #c0c0c0'}
-                    onMouseLeave={(e) => e.target.style.border = '1px outset #c0c0c0'}
+                    onMouseDown={(e) => e.currentTarget.style.border = '1px inset #c0c0c0'}
+                    onMouseUp={(e) => e.currentTarget.style.border = '1px outset #c0c0c0'}
+                    onMouseLeave={(e) => e.currentTarget.style.border = '1px outset #c0c0c0'}
                 >
                     Save
                 </button>
@@ -122,9 +122,9 @@ function Notepad() {
                         cursor: 'pointer',
                         fontFamily: 'MS Sans Serif, sans-serif',
                     }}
-                    onMouseDown={(e) => e.target.style.border = '1px inset #c0c0c0'}
-                    onMouseUp={(e) => e.target.style.border = '1px outset #c0c0c0'}
-                    onMouseLeave={(e) => e.target.style.border = '1px outset #c0c0c0'}
+                    onMouseDown={(e) => e.currentTarget.style.border = '1px inset #c0c0c0'}
+                    onMouseUp={(e) => e.currentTarget.style.border = '1px outset #c0c0c0'}
+                    onMouseLeave={(e) => e.currentTarget.style.border = '1px outset #c0c0c0'}
                 >
                     Clear
                 </button>

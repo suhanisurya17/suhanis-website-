@@ -80,9 +80,9 @@ function Photos() {
             alignItems: 'center',
             justifyContent: 'center',
           }}
-          onMouseDown={(e) => e.target.style.border = '1px inset #c0c0c0'}
-          onMouseUp={(e) => e.target.style.border = '1px outset #c0c0c0'}
-          onMouseLeave={(e) => e.target.style.border = '1px outset #c0c0c0'}
+          onMouseDown={(e) => e.currentTarget.style.border = '1px inset #c0c0c0'}
+          onMouseUp={(e) => e.currentTarget.style.border = '1px outset #c0c0c0'}
+          onMouseLeave={(e) => e.currentTarget.style.border = '1px outset #c0c0c0'}
         >
           ◀
         </button>
@@ -99,9 +99,9 @@ function Photos() {
             alignItems: 'center',
             justifyContent: 'center',
           }}
-          onMouseDown={(e) => e.target.style.border = '1px inset #c0c0c0'}
-          onMouseUp={(e) => e.target.style.border = '1px outset #c0c0c0'}
-          onMouseLeave={(e) => e.target.style.border = '1px outset #c0c0c0'}
+          onMouseDown={(e) => e.currentTarget.style.border = '1px inset #c0c0c0'}
+          onMouseUp={(e) => e.currentTarget.style.border = '1px outset #c0c0c0'}
+          onMouseLeave={(e) => e.currentTarget.style.border = '1px outset #c0c0c0'}
         >
           ▶
         </button>

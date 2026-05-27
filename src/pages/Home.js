@@ -1,51 +1,95 @@
 import React from 'react';
 
-function About() {
+function Home() {
+  const skills = [
+    { icon: '🐍', label: 'Python' },
+    { icon: '⚛️', label: 'React' },
+    { icon: '☕', label: 'Java' },
+    { icon: '🌐', label: 'JavaScript' },
+    { icon: '🎨', label: 'HTML/CSS' },
+    { icon: '🗄️', label: 'SQL' },
+  ];
+
   return (
     <div
       style={{
         fontFamily: 'MS Sans Serif, sans-serif',
         fontSize: '11px',
-        color: '#000', // classic black text
-        lineHeight: '1.6',
-        padding: '12px',
+        color: '#000',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+        padding: '10px',
+        boxSizing: 'border-box',
       }}
     >
-      <h2 style={{ marginTop: 0 }}>Hello, I'm Suhani Surya 👋</h2>
-      <p>
-        I'm a Systems Design Engineering student at the University of Waterloo with a passion for
-        software development and building meaningful projects. I enjoy creating applications and solving
-        problems using both front-end and back-end technologies.
-      </p>
+      {/* Header card */}
+      <div
+        style={{
+          border: '2px inset #c0c0c0',
+          backgroundColor: '#ffffff',
+          padding: '10px 14px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '14px',
+        }}
+      >
+        <div style={{ fontSize: '36px', lineHeight: 1, alignItems: 'center' }}>👩‍💻</div>
+        <div>
+          <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '3px' }}>
+            Suhani Surya
+          </div>
+          <div style={{ color: '#444', lineHeight: '1.5' }}>
+            Systems Design Engineering @ University of Waterloo
+          </div>
+          <div style={{ color: '#0000aa', marginTop: '2px' }}>
+            suhanisurya17@gmail.com
+          </div>
+        </div>
+      </div>
 
-      <h3>💡 Tech Skills</h3>
-      <ul style={{ paddingLeft: '20px' }}>
-        <li>💻 Python – data analysis, scripting, and software projects</li>
-        <li>⚛️ React – building interactive and modern web interfaces</li>
-        <li>☕ Java – object-oriented programming and software development</li>
-        <li>🌐 JavaScript & HTML – creating dynamic web applications</li>
-      </ul>
+      
+      <div style={{ border: '2px inset #c0c0c0', backgroundColor: '#fff', padding: '8px 12px', lineHeight: '1.6' }}>
+        <div style={{ fontWeight: 'bold', marginBottom: '4px', color: '#000080' }}>About Me</div>
+        I am a 2nd year Systems Design Engineering student at UWaterloo. I am interested in exploring the intersection of fashion and engineering, hoping to pursue a career in that space. 
+        I love to code, build and create in any way that I can. Outside of school/career stuff, I love to play sports and pursue as many hobbies as I can. I play volleyball, tennis, pickleball and badminton, and I also like to go on runs, bedazzle items, go thrifting, and crochet. 
+        I am always looking for new ways to learn and grow, and I am excited to see where my interests take me in the future.
+      </div>
 
-      <h3>🎯 Interests</h3>
-      <p>
-        Beyond coding, I enjoy exploring new technologies, engaging in side projects, and
-        learning how software can solve real-world problems. I’m passionate about collaborating
-        with people from different fields to create impactful solutions.
-      </p>
+      {/* Skills */}
+      <div style={{ border: '2px inset #c0c0c0', backgroundColor: '#fff', padding: '8px 12px' }}>
+        <div style={{ fontWeight: 'bold', marginBottom: '6px', color: '#000080' }}>Tech Skills</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+          {skills.map(({ icon, label }) => (
+            <div
+              key={label}
+              style={{
+                border: '1px outset #c0c0c0',
+                backgroundColor: '#c0c0c0',
+                padding: '2px 8px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <span>{icon}</span>
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
 
-      <h3>✨ Fun Fact</h3>
-      <p>
-        My grandmother was one of the first female engineers in Karnataka, which inspired me to pursue
-        a career in technology and innovation.
-      </p>
-
-      <h3>🎓 Career Goals</h3>
-      <p>
-        I aim to explore software and biomedical engineering applications in real-world systems,
-        focusing on innovation, accessibility, and impactful user experiences.
-      </p>
+      {/* Goals */}
+      <div style={{ border: '2px inset #c0c0c0', backgroundColor: '#fff', padding: '8px 12px', lineHeight: '1.6' }}>
+        <div style={{ fontWeight: 'bold', marginBottom: '4px', color: '#000080' }}>Career Goals</div>
+        Exploring software and biomedical engineering in real-world systems — focused on innovation,
+        accessibility, and impactful user experiences.
+      </div>
     </div>
   );
 }
 
-export default About;
+export default Home;
