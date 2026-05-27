@@ -33,7 +33,6 @@ function Stocks() {
 
       const API_KEY = process.env.REACT_APP_ALPHA_VANTAGE_API_KEY;
 
-      console.log('API Key:', API_KEY); // Check if it's defined
 
       // For demo purposes, we'll fetch a few key stocks
       const prioritySymbols = ['AAPL', 'GOOGL', 'MSFT', 'TSLA'];

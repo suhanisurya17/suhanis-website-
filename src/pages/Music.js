@@ -114,7 +114,7 @@ function Music() {
             min="0"
             max="100"
             value={volume}
-            onChange={(e) => setVolume(e.target.value)}
+            onChange={(e) => setVolume(parseInt(e.target.value, 10))}
             style={sliderStyle}
           />
           <span style={volumeDisplayStyle}>{volume}</span>
