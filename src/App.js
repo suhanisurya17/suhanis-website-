@@ -236,7 +236,6 @@ function App() {
     photos: { visible: false, minimized: false, maximized: false, top: 240, left: 450, zIndex: 10 },
     email: { visible: false, minimized: false, maximized: false, top: 260, left: 500, zIndex: 10 },
     stocks: { visible: false, minimized: false, maximized: false, top: 280, left: 550, zIndex: 10 },
-    susubot: { visible: false, minimized: false, maximized: false, top: 300, left: 600, zIndex: 10 },
     paint: { visible: false, minimized: false, maximized: false, top: 80, left: 120, zIndex: 10 },
     camerareviews: { visible: false, minimized: false, maximized: false, top: 140, left: 220, zIndex: 10 },
     welcome: { visible: true, minimized: false, maximized: false, top: 200, left: 400, zIndex: 10 },
@@ -314,7 +313,7 @@ function App() {
     setDragging({ key, startX, startY, startTop, startLeft });
   };
 
-  const onMouseMove = (e) => {
+  const onMouseMove = React.useCallback((e) => {
     if (!dragging) return;
     const deltaX = e.clientX - dragging.startX;
     const deltaY = e.clientY - dragging.startY;
@@ -323,9 +322,9 @@ function App() {
       dragging.startTop + deltaY,
       dragging.startLeft + deltaX
     );
-  };
+  }, [dragging]);
 
-  const onMouseUp = () => setDragging(null);
+  const onMouseUp = React.useCallback(() => setDragging(null), []);
 
   // Handle right-click context menu
   const handleContextMenu = (e) => {
@@ -341,25 +340,22 @@ function App() {
   // Handle context menu actions
   const handleRefresh = () => {
     window.location.reload();
-    setContextMenu({ ...contextMenu, visible: false });
+    setContextMenu((prev) => ({ ...prev, visible: false }));
   };
 
   const handleNewFolder = () => {
     alert('Create New Folder clicked! (Feature coming soon)');
-    setContextMenu({ ...contextMenu, visible: false });
+    setContextMenu((prev) => ({ ...prev, visible: false }));
   };
 
   const handleProperties = () => {
     alert('Desktop Properties:\n\nResolution: ' + window.innerWidth + 'x' + window.innerHeight + '\nTheme: Windows 98');
-    setContextMenu({ ...contextMenu, visible: false });
+    setContextMenu((prev) => ({ ...prev, visible: false }));
   };
 
-  // Close context menu on click
-  const handleClick = () => {
-    if (contextMenu.visible) {
-      setContextMenu({ ...contextMenu, visible: false });
-    }
-  };
+  const handleClick = React.useCallback(() => {
+    setContextMenu((prev) => prev.visible ? { ...prev, visible: false } : prev);
+  }, []);
 
   useEffect(() => {
     window.addEventListener("mousemove", onMouseMove);
@@ -370,7 +366,7 @@ function App() {
       window.removeEventListener("mouseup", onMouseUp);
       window.removeEventListener("click", handleClick);
     };
-  });
+  }, [onMouseMove, onMouseUp, handleClick]);
 
   const renderWindow = (key, Component) => {
     const win = windows[key];
@@ -864,24 +860,8 @@ function App() {
         <DesktopIcon label="Photos" icon="/icons/image-viewer.png" onClick={() => toggleWindow("photos", "visible")} />
         <DesktopIcon label="Email" icon="/icons/email.png" onClick={() => toggleWindow("email", "visible")} />
         <DesktopIcon label="Paint" icon="/icons/paint_old-0.png" onClick={() => toggleWindow("paint", "visible")} />
-      </div>
-
-      {/* Stocks & SusuBot Icons - Positioned separately for better visibility */}
-      <div style={{
-        position: "absolute",
-        top: "60px",
-        left: "90px",
-        color: "white",
-        fontFamily: "sans-serif",
-        fontSize: "13px",
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px"
-      }}>
         <DesktopIcon label="Stocks" icon="/icons/stocks.png" onClick={() => toggleWindow("stocks", "visible")} />
         <DesktopIcon label="Camera Reviews" icon="/icons/video_mg-1.png" onClick={() => toggleWindow("camerareviews", "visible")} />
-
       </div>
 
       {/* Windows */}
@@ -929,7 +909,7 @@ function App() {
 
         <div style={{ display: "flex", gap: "5px", marginLeft: "10px" }}>
           {Object.entries(windows).map(([key, w]) =>
-            w.visible && w.minimized && <TaskbarButton key={key} label={key.charAt(0).toUpperCase() + key.slice(1)} onClick={() => toggleWindow(key, "minimized")} />
+            w.visible && w.minimized && <TaskbarButton key={key} label={key === "designprojects" ? "Design Projects" : key === "camerareviews" ? "Camera Reviews" : key.charAt(0).toUpperCase() + key.slice(1)} onClick={() => toggleWindow(key, "minimized")} />
           )}
         </div>
 
@@ -990,9 +970,14 @@ function App() {
 // Desktop Icon
 function DesktopIcon({ label, icon, onClick }) {
   return (
-    <div onClick={onClick} style={iconStyle}>
+    <div
+      onClick={onClick}
+      style={iconStyle}
+      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.2)"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; }}
+    >
       <img src={icon} alt={label} width="32" />
-      <span>{label}</span>
+      <span style={{ marginTop: "3px", textShadow: "1px 1px 2px rgba(0,0,0,0.8)", lineHeight: "1.2", wordBreak: "break-word" }}>{label}</span>
     </div>
   );
 }
@@ -1075,14 +1060,17 @@ function TaskbarButton({ label, onClick }) {
 // Styles
 const iconContainerStyle = {
   position: "absolute",
-  top: "60px",
+  top: "10px",
   left: "10px",
+  bottom: "50px",
   display: "flex",
   flexDirection: "column",
-  gap: "20px",
+  flexWrap: "wrap",
+  alignContent: "flex-start",
+  gap: "8px",
   color: "white",
   fontFamily: "sans-serif",
-  fontSize: "13px",
+  fontSize: "12px",
   textAlign: "center",
 };
 
@@ -1091,6 +1079,9 @@ const iconStyle = {
   flexDirection: "column",
   alignItems: "center",
   cursor: "pointer",
+  width: "72px",
+  padding: "4px",
+  borderRadius: "2px",
 };
 
 const taskbarStyle = {
