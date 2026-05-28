@@ -6,6 +6,8 @@ export default function BatteryButton({ trayButtonStyle }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    let cleanup = () => {};
+
     async function getBatteryStatus() {
       try {
         if ('getBattery' in navigator) {
@@ -21,7 +23,7 @@ export default function BatteryButton({ trayButtonStyle }) {
           battery.addEventListener('levelchange', updateBatteryInfo);
           battery.addEventListener('chargingchange', updateBatteryInfo);
 
-          return () => {
+          cleanup = () => {
             battery.removeEventListener('levelchange', updateBatteryInfo);
             battery.removeEventListener('chargingchange', updateBatteryInfo);
           };
@@ -34,6 +36,8 @@ export default function BatteryButton({ trayButtonStyle }) {
     }
 
     getBatteryStatus();
+
+    return () => cleanup();
   }, []);
 
   const getBatteryColor = (level) => {
@@ -85,7 +89,7 @@ export default function BatteryButton({ trayButtonStyle }) {
             border: '1px solid #000'
           }} />
           <div style={{
-            width: `${batteryLevel}%`,
+            width: `${Math.max(batteryLevel, 4)}%`,
             height: '7px',
             background: getBatteryColor(batteryLevel),
             marginLeft: '1px'

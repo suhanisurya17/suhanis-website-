@@ -267,9 +267,6 @@ export default function DesignProjects() {
                 </div>
               </div>
 
-              <button style={openButtonStyle}>
-                Open Project
-              </button>
             </div>
           </div>
         )}
@@ -478,18 +475,6 @@ const previewImageStyle = {
   width: "100%",
   height: "auto",
   border: "1px solid #808080",
-};
-
-const openButtonStyle = {
-  width: "100%",
-  padding: "6px",
-  border: "2px outset #C0C0C0",
-  backgroundColor: "#C0C0C0",
-  cursor: "pointer",
-  fontFamily: "MS Sans Serif, sans-serif",
-  fontSize: "11px",
-  fontWeight: "bold",
-  marginTop: "8px",
 };
 
 const statusBarStyle = {
